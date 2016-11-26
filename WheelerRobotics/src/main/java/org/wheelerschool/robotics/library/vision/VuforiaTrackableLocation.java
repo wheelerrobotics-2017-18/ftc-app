@@ -45,10 +45,10 @@ public class VuforiaTrackableLocation {
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
 
         this.trackables = vuforia.loadTrackablesFromAsset("FTC_2016-17");
-        this.trackables.get(0).setName("Wheels");
-        this.trackables.get(1).setName("Tools");
-        this.trackables.get(2).setName("Legos");
-        this.trackables.get(3).setName("Gears");
+        this.trackables.get(0).setName("wheels");
+        this.trackables.get(1).setName("tools");
+        this.trackables.get(2).setName("legos");
+        this.trackables.get(3).setName("gears");
     }
 
     public void activate() {
