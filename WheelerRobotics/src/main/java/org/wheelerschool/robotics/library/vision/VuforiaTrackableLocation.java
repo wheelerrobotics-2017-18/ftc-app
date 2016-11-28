@@ -17,8 +17,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.R;
 import org.wheelerschool.robotics.config.Config;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,7 +54,13 @@ public class VuforiaTrackableLocation {
     }
 
     // Trackables:
-    public class TrackablesData {
+    public class Trackable {
+        public class TrackableData {
+            public VectorF translation;
+            public Orientation orientation;
+            public boolean visible;
+        }
+
         public VuforiaTrackable trackable;
         public VuforiaTrackableDefaultListener listener;
 
@@ -64,11 +68,11 @@ public class VuforiaTrackableLocation {
         public Orientation orientation = null;
         public Boolean visible = null;
 
-        public TrackablesData(VuforiaTrackable trackable) {
+        public Trackable(VuforiaTrackable trackable) {
             this(new OpenGLMatrix(new float[]{0,0,0}), VuforiaLocalizer.CameraDirection.BACK, trackable);
         }
 
-        public TrackablesData(OpenGLMatrix phoneLocation, VuforiaLocalizer.CameraDirection cameraDirection, VuforiaTrackable trackable) {
+        public Trackable(OpenGLMatrix phoneLocation, VuforiaLocalizer.CameraDirection cameraDirection, VuforiaTrackable trackable) {
             this.trackable = trackable;
             this.listener = (VuforiaTrackableDefaultListener) trackable.getListener();
             this.listener.setPhoneInformation(phoneLocation, cameraDirection);
@@ -78,23 +82,26 @@ public class VuforiaTrackableLocation {
             return this.listener.getPose();
         }
 
-        public void readData() {
-            this.visible = this.listener.isVisible();
+        public TrackableData getData() {
+            TrackableData trackableData = new TrackableData();
+            trackableData.visible = this.listener.isVisible();
 
             OpenGLMatrix pose = getPose();
 
-            this.translation = ((pose == null) ? null : pose.getTranslation());
-            this.orientation = ((pose == null) ? null : Orientation.getOrientation(pose, AxesReference.EXTRINSIC,
-                                                                                   AxesOrder.XYZ, AngleUnit.RADIANS));
+            trackableData.translation = ((pose == null) ? null : pose.getTranslation());
+            trackableData.orientation = ((pose == null) ? null : Orientation.getOrientation(pose,
+                    AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS));
+
+            return trackableData;
         }
     }
 
 
-    public Map<String, TrackablesData> getTrackables() {
-        Map<String, TrackablesData> beacons = new HashMap<>();
+    public Map<String, Trackable> getTrackables() {
+        Map<String, Trackable> beacons = new HashMap<>();
 
         for (VuforiaTrackable track : this.trackables) {
-            beacons.put(track.getName(), new TrackablesData(this.phoneLocation, this.params.cameraDirection, track));
+            beacons.put(track.getName(), new Trackable(this.phoneLocation, this.params.cameraDirection, track));
         }
         return beacons;
     }
