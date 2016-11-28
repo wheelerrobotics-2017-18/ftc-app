@@ -64,9 +64,6 @@ public class VuforiaTrackableLocation {
         public VuforiaTrackable trackable;
         public VuforiaTrackableDefaultListener listener;
 
-        public VectorF translation = null;
-        public Orientation orientation = null;
-        public Boolean visible = null;
 
         public Trackable(VuforiaTrackable trackable) {
             this(new OpenGLMatrix(new float[]{0,0,0}), VuforiaLocalizer.CameraDirection.BACK, trackable);
