@@ -36,18 +36,18 @@ public class VuforiaTrackableLocationTest extends LinearOpMode {
         waitForStart();
         targetsLocation.activate();
 
-        Map<String, VuforiaTrackableLocation.TrackablesData> trackables = targetsLocation.getTrackables();
+        Map<String, VuforiaTrackableLocation.Trackable> trackables = targetsLocation.getTrackables();
 
         while (opModeIsActive()) {
-            for (Map.Entry<String, VuforiaTrackableLocation.TrackablesData> entry : trackables.entrySet()) {
-                VuforiaTrackableLocation.TrackablesData track = entry.getValue();
-                track.readData();
+            for (Map.Entry<String, VuforiaTrackableLocation.Trackable> entry : trackables.entrySet()) {
+                VuforiaTrackableLocation.Trackable track = entry.getValue();
+                VuforiaTrackableLocation.Trackable.TrackableData data = track.getData();
 
-                telemetry.addData(entry.getKey() + "-Visible", track.visible);
+                telemetry.addData(entry.getKey() + "-Visible", data.visible);
 
-                if (track.visible == Boolean.TRUE) {
-                    telemetry.addData(entry.getKey() + "-Translation", track.translation);
-                    telemetry.addData(entry.getKey() + "-Orientation", track.orientation);
+                if (data.visible) {
+                    telemetry.addData(entry.getKey() + "-Translation", data.translation);
+                    telemetry.addData(entry.getKey() + "-Orientation", data.orientation);
                 }
             }
 
