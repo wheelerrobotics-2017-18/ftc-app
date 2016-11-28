@@ -55,6 +55,12 @@ public class VuforiaTrackableLocation {
 
     // Trackables:
     public class Trackable {
+        public class TrackableData {
+            public VectorF translation;
+            public Orientation orientation;
+            public boolean visible;
+        }
+
         public VuforiaTrackable trackable;
         public VuforiaTrackableDefaultListener listener;
 
@@ -76,14 +82,17 @@ public class VuforiaTrackableLocation {
             return this.listener.getPose();
         }
 
-        public void readData() {
-            this.visible = this.listener.isVisible();
+        public TrackableData getData() {
+            TrackableData trackableData = new TrackableData();
+            trackableData.visible = this.listener.isVisible();
 
             OpenGLMatrix pose = getPose();
 
-            this.translation = ((pose == null) ? null : pose.getTranslation());
-            this.orientation = ((pose == null) ? null : Orientation.getOrientation(pose, AxesReference.EXTRINSIC,
-                                                                                   AxesOrder.XYZ, AngleUnit.RADIANS));
+            trackableData.translation = ((pose == null) ? null : pose.getTranslation());
+            trackableData.orientation = ((pose == null) ? null : Orientation.getOrientation(pose,
+                    AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS));
+
+            return trackableData;
         }
     }
 
