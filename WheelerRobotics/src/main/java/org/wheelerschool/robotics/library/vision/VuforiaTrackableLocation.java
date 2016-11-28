@@ -54,7 +54,7 @@ public class VuforiaTrackableLocation {
     }
 
     // Trackables:
-    public class TrackablesData {
+    public class Trackable {
         public VuforiaTrackable trackable;
         public VuforiaTrackableDefaultListener listener;
 
@@ -62,11 +62,11 @@ public class VuforiaTrackableLocation {
         public Orientation orientation = null;
         public Boolean visible = null;
 
-        public TrackablesData(VuforiaTrackable trackable) {
+        public Trackable(VuforiaTrackable trackable) {
             this(new OpenGLMatrix(new float[]{0,0,0}), VuforiaLocalizer.CameraDirection.BACK, trackable);
         }
 
-        public TrackablesData(OpenGLMatrix phoneLocation, VuforiaLocalizer.CameraDirection cameraDirection, VuforiaTrackable trackable) {
+        public Trackable(OpenGLMatrix phoneLocation, VuforiaLocalizer.CameraDirection cameraDirection, VuforiaTrackable trackable) {
             this.trackable = trackable;
             this.listener = (VuforiaTrackableDefaultListener) trackable.getListener();
             this.listener.setPhoneInformation(phoneLocation, cameraDirection);
@@ -88,11 +88,11 @@ public class VuforiaTrackableLocation {
     }
 
 
-    public Map<String, TrackablesData> getTrackables() {
-        Map<String, TrackablesData> beacons = new HashMap<>();
+    public Map<String, Trackable> getTrackables() {
+        Map<String, Trackable> beacons = new HashMap<>();
 
         for (VuforiaTrackable track : this.trackables) {
-            beacons.put(track.getName(), new TrackablesData(this.phoneLocation, this.params.cameraDirection, track));
+            beacons.put(track.getName(), new Trackable(this.phoneLocation, this.params.cameraDirection, track));
         }
         return beacons;
     }
