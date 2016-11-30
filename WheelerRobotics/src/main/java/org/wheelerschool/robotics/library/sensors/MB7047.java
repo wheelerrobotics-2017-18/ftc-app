@@ -16,6 +16,10 @@ public class MB7047 implements HardwareDevice {
     I2cAddr i2cAddr;
     I2cDeviceSynch device;
 
+    // I2C REGISTERS:
+    private static int TAKE_RANGE_READING_REGISTER = 81; // WRITE
+    private static int GET_LAST_READING_REGISTER = 0; // READ
+
     public MB7047(I2cDevice i2cDevice){
         this(DEFAULT_I2C_ADDR, i2cDevice);
     }
@@ -54,5 +58,26 @@ public class MB7047 implements HardwareDevice {
     @Override
     public int getVersion() {
         return 1;
+    }
+
+
+    // SENSOR INTERACTION:
+    //      Signal sensor to take reading:
+    public void takeReading() {
+        device.write8(TAKE_RANGE_READING_REGISTER, 0, true);
+    }
+    //      Get the last distance reading:
+    public byte[] getLastDistance() {
+        return device.read(GET_LAST_READING_REGISTER, 2);
+    }
+
+    // Full distance read:
+    public byte[] readDistance() throws InterruptedException {
+        takeReading();
+
+        // Sleep to allow data acquisition
+        Thread.sleep(80);
+
+        return getLastDistance();
     }
 }
