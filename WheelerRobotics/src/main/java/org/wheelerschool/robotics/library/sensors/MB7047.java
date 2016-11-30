@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
  */
 
 public class MB7047 implements HardwareDevice {
-    static I2cAddr DEFAULT_I2C_ADDR = I2cAddr.create7bit(0x70);
+    static I2cAddr DEFAULT_I2C_ADDR = I2cAddr.create7bit(0x70); // = 112 (7 bit addr)
 
     I2cAddr i2cAddr;
     I2cDeviceSynch device;
