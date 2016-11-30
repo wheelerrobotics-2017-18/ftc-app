@@ -18,7 +18,7 @@ public class LinearOpModeUtil {
                     } catch(Exception e) {
                         throw new InterruptedException();
                     }
-                    // opMode.wait();
+                    opMode.wait();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     return;
