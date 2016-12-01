@@ -59,7 +59,7 @@ public class DriveToVuforiaTrackable extends LinearOpMode {
 
         Map<String, VuforiaTrackableLocation.Trackable> trackables = targetsLocation.getTrackables();
 
-        String trackableName = "wheels";
+        String trackableName = "gears";
 
         VuforiaTrackableLocation.Trackable wheels = trackables.get(trackableName);
         while (opModeIsActive()) {
