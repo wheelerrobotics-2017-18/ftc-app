@@ -77,6 +77,9 @@ public class DriveToVuforiaTrackable extends LinearOpMode {
                         this.navigation.calculateNavigationData(translation.get(2),
                                 translation.get(1), orientation.secondAngle);
 
+                telemetry.addData("Left Power", navData.leftMotorPower);
+                telemetry.addData("Right Power", navData.rightMotorPower);
+
                 DcMotorUtil.setMotorsPower(this.leftMotors, navData.leftMotorPower);
                 DcMotorUtil.setMotorsPower(this.rightMotors, navData.rightMotorPower);
             } else {
