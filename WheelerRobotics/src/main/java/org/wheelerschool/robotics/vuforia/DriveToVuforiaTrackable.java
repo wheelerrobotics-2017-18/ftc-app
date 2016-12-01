@@ -77,9 +77,13 @@ public class DriveToVuforiaTrackable extends LinearOpMode {
                 telemetry.addData(trackableName + "-Translation", translation);
                 telemetry.addData(trackableName + "-Orientation", orientation);
 
+                float x = translation.get(2);
+                float y = translation.get(1);
+
+                float robotAngle = orientation.secondAngle;
+
                 TranslationMotorNavigation.NavigationData navData =
-                        this.navigation.calculateNavigationData(translation.get(2),
-                                translation.get(1), orientation.secondAngle);
+                        this.navigation.calculateNavigationData(x, y, robotAngle);
 
                 telemetry.addData("Left Power", navData.leftMotorPower);
                 telemetry.addData("Right Power", navData.rightMotorPower);
