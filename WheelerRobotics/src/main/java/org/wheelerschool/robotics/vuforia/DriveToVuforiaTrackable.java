@@ -42,6 +42,9 @@ public class DriveToVuforiaTrackable extends LinearOpMode {
         rightMotors.add(hardwareMap.dcMotor.get("rightFront"));
 
         this.navigation = new TranslationMotorNavigation();
+        this.navigation.DEFAULT_ROTATION_GAIN = 1.5;
+        this.navigation.MIN_DRIVE_DISTANCE = 50;
+        this.navigation.ROTATION_IGNORE_DISTANCE = 300;
 
         OpenGLMatrix phoneLocation = OpenGLMatrix
                 .translation((15 * VuforiaTrackableLocation.MM_PER_INCH)/2 ,
