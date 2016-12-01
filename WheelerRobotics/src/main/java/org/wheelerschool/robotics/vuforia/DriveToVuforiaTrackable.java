@@ -88,6 +88,7 @@ public class DriveToVuforiaTrackable extends LinearOpMode {
             }
 
             telemetry.update();
+            Thread.sleep(50);
         }
     }
 }
