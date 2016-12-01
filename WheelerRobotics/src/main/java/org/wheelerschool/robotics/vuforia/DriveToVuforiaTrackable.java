@@ -53,8 +53,9 @@ public class DriveToVuforiaTrackable extends LinearOpMode {
 
         targetsLocation = new VuforiaTrackableLocation(phoneLocation);
 
-        waitForStart();
         targetsLocation.activate();
+
+        waitForStart();
 
         Map<String, VuforiaTrackableLocation.Trackable> trackables = targetsLocation.getTrackables();
 
