@@ -84,7 +84,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     private static double ROBOT_ROTATION_GAIN = 1.5;
     private static long MINIMUM_ENCODER_DRIVE_VALUE = 50;
     private static double WALL_FOLLOW_FRONT_SPEED = 0.25;
-    private static double NOMINAL_DISTANCE = 15;
+    private static double NOMINAL_DISTANCE = 20;
     private static double MAXIMUM_DISTANCE = 60;
     private double MIN_LINE_REFLECT_AMT = 0.4; // TODO: UPDATE THIS VALUE
 
