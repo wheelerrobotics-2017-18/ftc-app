@@ -399,6 +399,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         // Drive forward by encoder counts:
         driveForwardByEncoder(0.4, 6700);
 
+        // Rotate robot to angle towards beacon
         rotateRobotIMU(AFTER_ENCODER_ROTATE_ANGLE, 1);
 
         //      Drive to the wall:
