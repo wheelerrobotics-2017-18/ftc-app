@@ -155,7 +155,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     }
 
 
-    private Double driveToPosition(VectorF targetLocation) throws InterruptedException {
+    private Double driveToPosition(VectorF targetLocation, double motorGain) throws InterruptedException {
         /*---------------------------------DRIVE TO INITIAL POINT---------------------------------*/
         // Translation Navigation Setup:
         TranslationMotorNavigation translationNavigation = new TranslationMotorNavigation();
@@ -194,6 +194,9 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
                 if (calculationData.onTarget) {
                     return (double) robotRot;
                 }
+
+                calculationData.leftMotorPower = calculationData.leftMotorPower * motorGain;
+                calculationData.rightMotorPower = calculationData.rightMotorPower * motorGain;
 
                 // Add data to telemetry for debug:
                 telemetry.addData("On Target", calculationData.onTarget);
@@ -403,7 +406,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         rotateRobotIMU(AFTER_ENCODER_ROTATE_ANGLE, 1);
 
         //      Drive to the wall:
-        Double robotRot = driveToPosition(FIRST_BEACON_LOCATION);
+        Double robotRot = driveToPosition(FIRST_BEACON_LOCATION, 1.5);
         // Log final robot angle:
         Log.d(LOG_TAG, "Robot Angle: " + robotRot);
 
