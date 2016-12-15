@@ -6,6 +6,7 @@ import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Range;
 
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.wheelerschool.robotics.library.navigation.ConstantDistanceMotorNavigation;
 import org.wheelerschool.robotics.library.navigation.TranslationMotorNavigation;
 import org.wheelerschool.robotics.library.util.DcMotorUtil;
 import org.wheelerschool.robotics.library.util.LinearOpModeUtil;
@@ -57,7 +59,9 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     //      Motor:
     public List<DcMotor> leftMotors = new ArrayList<>();
     public List<DcMotor> rightMotors = new ArrayList<>();
-    //      IMU:
+    //      Sensors
+    OpticalDistanceSensor groundReflectSensor;
+    //        IMU:
     BNO055IMU imu;
 
     // Setup:
@@ -79,6 +83,10 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     private static double MINIMUM_ROTATION_DIFF = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 5);
     private static double ROBOT_ROTATION_GAIN = 1.5;
     private static long MINIMUM_ENCODER_DRIVE_VALUE = 50;
+    private static double WALL_FOLLOW_FRONT_SPEED = 0.25;
+    private static double NOMINAL_DISTANCE = 15;
+    private static double MAXIMUM_DISTANCE = 60;
+    private double MIN_LINE_REFLECT_AMT = 0.4; // TODO: UPDATE THIS VALUE
 
 
     private void idleMotors() {
@@ -376,6 +384,49 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         idleMotors();
     }
 
+
+    private void followWall() { // TODO: IMPLEMENT 'maxEncoderTurns'
+        /*--------------------------------------FOLLOW THE WALL-----------------------------------*/
+        ConstantDistanceMotorNavigation constantDistanceNavigation = new ConstantDistanceMotorNavigation(NOMINAL_DISTANCE, MAXIMUM_DISTANCE);
+        constantDistanceNavigation.ROTATION_GAIN = 1.5;
+
+        while (opModeIsActive()) {
+            telemetry.addData("Phase", "Following Wall");
+
+            double sideUltrasonicLevel = sideUltrasonicSensor.getUltrasonicLevel();
+            telemetry.addData("Side Ultrasonic Value", sideUltrasonicLevel);
+
+            // Get motor power:
+            ConstantDistanceMotorNavigation.NavigationData navigationData =
+                    constantDistanceNavigation.calculateNavigationData(WALL_FOLLOW_FRONT_SPEED, sideUltrasonicLevel);
+            //      Factor in gain:
+            navigationData.closerMotorPower = navigationData.closerMotorPower * this.closeMotorGain;
+            navigationData.fartherMotorPower = navigationData.fartherMotorPower * this.fartherMotorGain;
+            // Set motors power:
+            DcMotorUtil.setMotorsPower(this.closeMotors, navigationData.closerMotorPower);
+            DcMotorUtil.setMotorsPower(this.fartherMotors, navigationData.fartherMotorPower);
+
+            // Add motors powers to telemetry:
+            telemetry.addData("Closer Motor Power", navigationData.closerMotorPower);
+            telemetry.addData("Farther Motor Power", navigationData.fartherMotorPower);
+
+            telemetry.addData("Rotation Power", navigationData.rotationPower);
+
+            // Update telemetry:
+            telemetry.update();
+
+
+            // Check if on beacon line:
+            double groundReflect = this.groundReflectSensor.getLightDetected();
+
+            if (groundReflect > this.MIN_LINE_REFLECT_AMT) {
+                Log.d(LOG_TAG, "Ground Reflect: " + groundReflect + " > " + this.MIN_LINE_REFLECT_AMT);
+                idleMotors();
+                break;
+            }
+        }
+    }
+
     // OpMode:
     public void runOpMode() throws InterruptedException {
         // Hardware Setup:
@@ -386,7 +437,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         this.rightMotors.add(hardwareMap.dcMotor.get("frontRight"));
         //this.rightMotors.add(hardwareMap.dcMotor.get("backRight"));
         DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
-        //      IMU:
+        //      Sensors:
+        //          IMU:
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -397,6 +449,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         //          Retrieve and initialize the IMU:
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
+        //          ODS:
+        this.groundReflectSensor = hardwareMap.opticalDistanceSensor.get("groundODS");
 
         // Wait for start button to be pushed:
         LinearOpModeUtil.runWhileWait(this, new Callable<Void>() {
@@ -454,6 +508,9 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             Log.d(LOG_TAG, "Rotation Angle: " + rotationAngle);
             // Start IMU based robot rotation:
             rotateRobotIMU(rotationAngle, ROBOT_ROTATION_GAIN);
+
+            // Follow the wall:
+            followWall();
         } else {  // This means that the drive to position was interrupted:
             Log.e(LOG_TAG, "Final Robot angle was 'null' (interrupted). ENDING!");
         }
