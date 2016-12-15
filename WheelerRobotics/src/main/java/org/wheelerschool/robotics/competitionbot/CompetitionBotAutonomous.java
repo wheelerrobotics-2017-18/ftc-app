@@ -17,10 +17,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.wheelerschool.robotics.library.navigation.TranslationMotorNavigation;
 import org.wheelerschool.robotics.library.util.DcMotorUtil;
+import org.wheelerschool.robotics.library.util.LinearOpModeUtil;
 import org.wheelerschool.robotics.library.vision.VuforiaLocation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Created by luciengaitskell on 11/24/16.
@@ -327,6 +329,15 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         imu.initialize(parameters);
 
         // Wait for start button to be pushed:
+        LinearOpModeUtil.runWhileWait(this, new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                vuforia.readData();
+                telemetry.addData("Trackables", vuforia.lastTrackableData);
+                telemetry.update();
+                return null;
+            }
+        });
         waitForStart();
 
         // Autonomous Sections:
