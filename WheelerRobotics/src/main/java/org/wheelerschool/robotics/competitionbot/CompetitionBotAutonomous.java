@@ -35,7 +35,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
      *  1. closeMotors
      *  2. fartherMotors
      *  3. sideUltrasonicSensor
-     *  4. INITAL_LOCATION
+     *  4. FIRST_BEACON_LOCATION
      *  5. PRE_WALL_FOLLOW_ANGLE
      */
     //      Wall Follow Motors:
@@ -46,7 +46,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     //      Sensors:
     public UltrasonicSensor sideUltrasonicSensor;
     //      Other:
-    public VectorF INITAL_LOCATION;
+    public VectorF FIRST_BEACON_LOCATION;
     public double TOWARDS_BEACON_ANGLE;
     public double PRE_WALL_FOLLOW_ANGLE; // The angle to turn to before following the wall (radians)
 
@@ -399,7 +399,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         driveForwardByEncoder(0.4, 6700);
 
         //      Drive to the wall:
-        Double robotRot = driveToPosition(INITAL_LOCATION);
+        Double robotRot = driveToPosition(FIRST_BEACON_LOCATION);
         // Log final robot angle:
         Log.d(LOG_TAG, "Robot Angle: " + robotRot);
 
