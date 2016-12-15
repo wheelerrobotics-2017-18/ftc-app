@@ -46,6 +46,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     //      Sensors:
     public UltrasonicSensor sideUltrasonicSensor;
     //      Other:
+    public double AFTER_ENCODER_ROTATE_ANGLE; // The relative angle to turn after the initial drive with encoders
     public VectorF FIRST_BEACON_LOCATION;
     public double TOWARDS_BEACON_ANGLE;
     public double PRE_WALL_FOLLOW_ANGLE; // The angle to turn to before following the wall (radians)
@@ -397,6 +398,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         // Autonomous Sections:
         // Drive forward by encoder counts:
         driveForwardByEncoder(0.4, 6700);
+
+        rotateRobotIMU(AFTER_ENCODER_ROTATE_ANGLE, 1);
 
         //      Drive to the wall:
         Double robotRot = driveToPosition(FIRST_BEACON_LOCATION);
