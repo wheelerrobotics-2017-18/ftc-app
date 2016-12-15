@@ -80,6 +80,11 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     private static long MINIMUM_ENCODER_DRIVE_VALUE = 50;
 
 
+    private void idleMotors() {
+        DcMotorUtil.setMotorsPower(this.leftMotors, 0);
+        DcMotorUtil.setMotorsPower(this.rightMotors, 0);
+    }
+
     private void noTargetSearchRotate() throws InterruptedException {
         // Log data and add to telemetry for debug:
         telemetry.addData("ERROR", "Target has not been seen in " + MAX_TIME_TIMEOUT + "ms");
@@ -150,8 +155,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         }
 
         // Stop motors:
-        DcMotorUtil.setMotorsPower(this.leftMotors, 0);
-        DcMotorUtil.setMotorsPower(this.rightMotors, 0);
+        idleMotors();
     }
 
 
@@ -192,6 +196,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
                 // Break if on target (and return robot rotation):
                 if (calculationData.onTarget) {
+                    idleMotors();
                     return (double) robotRot;
                 }
 
@@ -227,6 +232,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             // Sleep to control loop:
             Thread.sleep(50);
         }
+
+        idleMotors();
 
         // Return null if interrupted:
         return null;
@@ -293,6 +300,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
                 // Rotate robot using rotation angle and gain:
                 boolean finishedRotation = robotRotation(rotationAngle, rotationGain);
                 if (finishedRotation) {  // Break from loop if the rotation has been ended:
+                    idleMotors();
                     return robotRotation;
                 }
             } if (System.currentTimeMillis() - timeSinceLastData > MAX_TIME_TIMEOUT) {
@@ -304,6 +312,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             telemetry.update();
         }
 
+        idleMotors();
         return null;
     }
 
@@ -362,6 +371,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             // Update telemetry:
             telemetry.update();
         }
+
+        idleMotors();
     }
 
     // OpMode:
