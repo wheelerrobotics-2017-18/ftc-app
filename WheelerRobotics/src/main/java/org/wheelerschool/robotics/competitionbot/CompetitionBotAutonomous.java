@@ -53,6 +53,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     public VectorF FIRST_BEACON_PRESS_LOCATION;
     public double TOWARDS_BEACON_ANGLE;
     public double PRE_WALL_FOLLOW_ANGLE; // The angle to turn to before following the wall (radians)
+    public double POST_WALL_FOLLOW_ROTATE_ANGLE; // (relative)
 
 
     // Hardware Setup:
@@ -518,6 +519,11 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
             // Follow the wall:
             followWall();
+
+            Thread.sleep(100);
+
+            // Rotate to second beacon:
+            rotateRobotIMU(POST_WALL_FOLLOW_ROTATE_ANGLE, 1);
         } else {  // This means that the drive to position was interrupted:
             Log.e(LOG_TAG, "Final Robot angle was 'null' (interrupted). ENDING!");
         }
