@@ -34,4 +34,27 @@ public class DcMotorUtil {
             mtr.setPower(power);
         }
     }
+
+    public static Long getMotorsPosition(List<DcMotor> motors) {
+        /**
+         * Get the average encoder position of all motors in a list.
+         *
+         * Returns:
+         *      Long: Average encoder positions of the 'DcMotor's.
+         *      null: If there are no motors in the list.
+         */
+        long encoderTotal = 0;
+        int motorCount = 0;
+
+        for (DcMotor mtr : motors) {
+            motorCount++;
+            encoderTotal += mtr.getCurrentPosition();
+        }
+
+        if (motorCount < 1) {
+            return null;
+        }
+
+        return encoderTotal / motorCount;
+    }
 }
