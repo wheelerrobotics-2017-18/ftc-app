@@ -48,6 +48,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     //      Other:
     public double AFTER_ENCODER_ROTATE_ANGLE; // The relative angle to turn after the initial drive with encoders
     public VectorF FIRST_BEACON_LOCATION;
+    public VectorF FIRST_BEACON_PRESS_LOCATION;
     public double TOWARDS_BEACON_ANGLE;
     public double PRE_WALL_FOLLOW_ANGLE; // The angle to turn to before following the wall (radians)
 
@@ -427,6 +428,16 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         Log.d(LOG_TAG, "SHOULD BE FACING BEACON");
         // Log final robot angle:
         Log.d(LOG_TAG, "Robot Angle: " + robotRot);
+
+        // Drive in to press beacon:
+        robotRot = driveToPosition(FIRST_BEACON_PRESS_LOCATION, 1.5);
+
+        DcMotorUtil.setMotorsPower(this.leftMotors, 0);
+        DcMotorUtil.setMotorsPower(this.rightMotors, 0);
+        Log.d(LOG_TAG, "CLICK BEACON HERE!");
+        Thread.sleep(5000);
+
+        robotRot = driveToPosition(FIRST_BEACON_LOCATION, 2);
 
         // Sleep to break between rotate towards wall and rotate away
         Thread.sleep(1000);
