@@ -312,10 +312,10 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         // Hardware Setup:
         //      Motors:
         this.leftMotors.add(hardwareMap.dcMotor.get("frontLeft"));
-        this.leftMotors.add(hardwareMap.dcMotor.get("backLeft"));
+        //this.leftMotors.add(hardwareMap.dcMotor.get("backLeft"));
         DcMotorUtil.setMotorsRunMode(this.leftMotors, DcMotor.RunMode.RUN_USING_ENCODER);
         this.rightMotors.add(hardwareMap.dcMotor.get("frontRight"));
-        this.rightMotors.add(hardwareMap.dcMotor.get("backRight"));
+        //this.rightMotors.add(hardwareMap.dcMotor.get("backRight"));
         DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
         //      IMU:
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
