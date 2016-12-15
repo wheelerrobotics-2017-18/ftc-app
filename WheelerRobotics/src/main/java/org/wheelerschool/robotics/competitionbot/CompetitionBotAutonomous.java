@@ -158,24 +158,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
             // If target are not seen after some amount of time, rotate to find one:
             if (System.currentTimeMillis() - time > MAX_TIME_TIMEOUT) {
-                // Log data and add to telemetry for debug:
-                telemetry.addData("ERROR", "Target has not been seen in " + MAX_TIME_TIMEOUT + "ms");
-                Log.d("Vuforia Data", "Lost beacon (" + MAX_TIME_TIMEOUT + "ms). Rotating...");
-
-                // Set motors to rotate:
-                DcMotorUtil.setMotorsPower(this.leftMotors, NO_BEACON_ROTATE_SPEED);
-                DcMotorUtil.setMotorsPower(this.rightMotors, NO_BEACON_ROTATE_SPEED);
-
-                // Sleep to allow for rotation:
-                Thread.sleep(200);
-
-                // Stop motors:
-                DcMotorUtil.setMotorsPower(this.leftMotors, 0);
-                DcMotorUtil.setMotorsPower(this.rightMotors, 0);
-                Log.d("Vuforia Data", "Ended Rotation");
-
-                // Wait to allow camera to adjust and acquire a lock on a target
-                Thread.sleep(500);
+                noTargetSearchRotate();
             }
 
             // Update telemetry:
