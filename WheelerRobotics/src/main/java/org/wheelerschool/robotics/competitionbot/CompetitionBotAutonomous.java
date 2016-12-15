@@ -76,6 +76,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     private static double NO_BEACON_ROTATE_SPEED = 0.25;
     private static double MINIMUM_ROTATION_DIFF = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 5);
     private static double ROBOT_ROTATION_GAIN = 1.5;
+    private static long MINIMUM_ENCODER_DRIVE_VALUE = 50;
 
 
     private void noTargetSearchRotate() throws InterruptedException {
@@ -100,6 +101,58 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     }
 
     /*------------------------------------AUTONOMOUS SECTIONS-------------------------------------*/
+
+    private void driveForwardByEncoder(double motorPower, long encoderVal) throws InterruptedException {
+        // Reset Encoders:
+        DcMotorUtil.setMotorsRunMode(this.leftMotors, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Thread.sleep(50);  // Wait for reset to occur...
+        // Change mode to run using the encoders:
+        DcMotorUtil.setMotorsRunMode(this.leftMotors, DcMotor.RunMode.RUN_USING_ENCODER);
+        DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Log the info:
+        Log.i(LOG_TAG, "RESET LEFT/RIGHT MOTOR ENCODERS");
+        Log.i(LOG_TAG, "Left Encoders Average: " + DcMotorUtil.getMotorsPosition(this.leftMotors));
+        Log.i(LOG_TAG, "Right Encoders Average: " + DcMotorUtil.getMotorsPosition(this.rightMotors));
+
+        while (opModeIsActive()) {
+            // Get encoder values:
+            Long leftEncoder = DcMotorUtil.getMotorsPosition(this.leftMotors);
+            Long rightEncoder = DcMotorUtil.getMotorsPosition(this.rightMotors);
+
+            // Check if encoder value was returned:
+            if (leftEncoder != null && rightEncoder != null) {
+                Log.d(LOG_TAG, "Left Encoders Average: " + leftEncoder);
+                Log.d(LOG_TAG, "Right Encoders Average: " + rightEncoder);
+
+                long leftChange = encoderVal - leftEncoder;
+                long rightChange = encoderVal - (-rightEncoder);
+
+                Log.d(LOG_TAG, "Left Encoders Change: " + leftChange);
+                Log.d(LOG_TAG, "Right Encoders Change: " + rightChange);
+
+                // Break if both sides at final position:
+                if (Math.abs(leftChange) < MINIMUM_ENCODER_DRIVE_VALUE
+                        && Math.abs(rightChange) < MINIMUM_ENCODER_DRIVE_VALUE) {
+                    Log.d(LOG_TAG, "ENCODERS AT FINAL POSITION!");
+                    break;
+                }
+
+                // Drive motors by designated motor power (in right direction)
+                DcMotorUtil.setMotorsPower(this.leftMotors, motorPower * Math.signum(leftChange));
+                DcMotorUtil.setMotorsPower(this.rightMotors, -motorPower * Math.signum(rightChange));
+            } else {  // This means that there was no encoder data:
+                Log.w(LOG_TAG, "ENCODER DRIVE: NO ENCODER DATA!");
+                break;
+            }
+        }
+
+        // Stop motors:
+        DcMotorUtil.setMotorsPower(this.leftMotors, 0);
+        DcMotorUtil.setMotorsPower(this.rightMotors, 0);
+    }
+
 
     private Double driveToPosition(VectorF targetLocation) throws InterruptedException {
         /*---------------------------------DRIVE TO INITIAL POINT---------------------------------*/
@@ -342,6 +395,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         waitForStart();
 
         // Autonomous Sections:
+        // Drive forward by encoder counts:
+        driveForwardByEncoder(0.4, 6700);
 
         //      Drive to the wall:
         Double robotRot = driveToPosition(INITAL_LOCATION);
