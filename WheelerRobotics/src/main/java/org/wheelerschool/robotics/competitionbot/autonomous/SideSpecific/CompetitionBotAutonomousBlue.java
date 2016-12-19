@@ -1,4 +1,4 @@
-package org.wheelerschool.robotics.competitionbot.SideSpecific;
+package org.wheelerschool.robotics.competitionbot.autonomous.SideSpecific;
 
 import android.util.Log;
 
@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.wheelerschool.robotics.competitionbot.CompetitionBotAutonomous;
+import org.wheelerschool.robotics.competitionbot.autonomous.CompetitionBotAutonomous;
 import org.wheelerschool.robotics.library.vision.VuforiaLocation;
 
 /**

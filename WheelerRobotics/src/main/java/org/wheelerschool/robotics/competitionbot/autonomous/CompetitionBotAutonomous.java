@@ -1,4 +1,4 @@
-package org.wheelerschool.robotics.competitionbot;
+package org.wheelerschool.robotics.competitionbot.autonomous;
 
 import android.util.Log;
 
