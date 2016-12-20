@@ -11,5 +11,5 @@ USAGE INSTRUCTIONS:
  */
 
 public class ExampleConfig {
-    public static String EXAMPLE_VALUE = "VALUE";
+    public static String VUFORIA_KEY = "VUFORIA_KEY";
 }
