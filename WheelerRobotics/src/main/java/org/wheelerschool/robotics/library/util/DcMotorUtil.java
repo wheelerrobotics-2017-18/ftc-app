@@ -1,6 +1,7 @@
 package org.wheelerschool.robotics.library.util;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.List;
 
@@ -23,6 +24,15 @@ public class DcMotorUtil {
          */
         for (DcMotor mtr : motors) {
             mtr.setMode(runMode);
+        }
+    }
+
+    public static void setMotorsDirection(List<DcMotor> motors, DcMotorSimple.Direction direction) {
+        /**
+         * Set the Direction of all motors in a list.
+         */
+        for (DcMotor mtr : motors) {
+            mtr.setDirection(direction);
         }
     }
 
