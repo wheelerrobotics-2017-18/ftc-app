@@ -180,7 +180,7 @@ public class TranslationMotorNavigation {
                     translationAngle, leftPower, rightPower, robotAngle));
             // Set motor power:
             navigationData.leftMotorPower = leftPower;
-            navigationData.rightMotorPower = -1 * rightPower;
+            navigationData.rightMotorPower = rightPower;
         }
 
         // Add debug values to data object:

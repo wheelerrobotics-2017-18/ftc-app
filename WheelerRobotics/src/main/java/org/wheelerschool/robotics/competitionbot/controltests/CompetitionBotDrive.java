@@ -33,7 +33,7 @@ public class CompetitionBotDrive extends OpMode {
     @Override
     public void loop() {
         DcMotorUtil.setMotorsPower(leftMotors, gamepad1.left_stick_y * motorGain);
-        DcMotorUtil.setMotorsPower(rightMotors, -gamepad1.right_stick_y * motorGain);
+        DcMotorUtil.setMotorsPower(rightMotors, gamepad1.right_stick_y * motorGain);
 
         telemetry.addData("Left Motors Encoder", DcMotorUtil.getMotorsPosition(leftMotors));
         telemetry.addData("Right Motors Encoder", DcMotorUtil.getMotorsPosition(rightMotors));

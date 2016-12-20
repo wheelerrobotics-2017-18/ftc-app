@@ -1,7 +1,10 @@
 package org.wheelerschool.robotics.competitionbot;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.wheelerschool.robotics.library.util.DcMotorUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,7 @@ public class CompetitionBotConfig {
     public static List<DcMotor> getRightMotors(HardwareMap hardwareMap) {
         List<DcMotor> motors = new ArrayList<>();
         motors.add(hardwareMap.dcMotor.get("backRight"));
+        DcMotorUtil.setMotorsDirection(motors, DcMotorSimple.Direction.REVERSE);
         return motors;
     }
 }

@@ -30,7 +30,7 @@ public class CompetitionBotAutonomousBlue extends CompetitionBotAutonomous {
         this.sideUltrasonicSensor = hardwareMap.ultrasonicSensor.get("leftUltrasonicSensor");
         this.closeMotorGain = 1;
         this.closeMotors = this.leftMotors;
-        this.fartherMotorGain = -1;
+        this.fartherMotorGain = 1;
         this.fartherMotors = this.rightMotors;
 
         super.runOpMode();
