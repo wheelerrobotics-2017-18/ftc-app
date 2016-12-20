@@ -6,6 +6,7 @@ import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Range;
@@ -104,7 +105,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
         // Set motors to rotate:
         DcMotorUtil.setMotorsPower(this.leftMotors, NO_BEACON_ROTATE_SPEED);
-        DcMotorUtil.setMotorsPower(this.rightMotors, NO_BEACON_ROTATE_SPEED);
+        DcMotorUtil.setMotorsPower(this.rightMotors, -NO_BEACON_ROTATE_SPEED);
 
         // Sleep to allow for rotation:
         Thread.sleep(200);
@@ -145,7 +146,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
                 Log.d(LOG_TAG, "Right Encoders Average: " + rightEncoder);
 
                 long leftChange = encoderVal - leftEncoder;
-                long rightChange = encoderVal - (-rightEncoder);
+                long rightChange = encoderVal - rightEncoder;
 
                 Log.d(LOG_TAG, "Left Encoders Change: " + leftChange);
                 Log.d(LOG_TAG, "Right Encoders Change: " + rightChange);
@@ -159,7 +160,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
                 // Drive motors by designated motor power (in right direction)
                 DcMotorUtil.setMotorsPower(this.leftMotors, motorPower * Math.signum(leftChange));
-                DcMotorUtil.setMotorsPower(this.rightMotors, -motorPower * Math.signum(rightChange));
+                DcMotorUtil.setMotorsPower(this.rightMotors, motorPower * Math.signum(rightChange));
             } else {  // This means that there was no encoder data:
                 Log.w(LOG_TAG, "ENCODER DRIVE: NO ENCODER DATA!");
                 break;
@@ -280,7 +281,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         DcMotorUtil.setMotorsPower(this.leftMotors, leftPower);
 
         // Calculate right motors power and set motors:
-        double rightPower = Range.clip(rotationPower, -1, 1);
+        double rightPower = -Range.clip(rotationPower, -1, 1);
         telemetry.addData("Right Motor Power", rightPower);
         DcMotorUtil.setMotorsPower(this.rightMotors, rightPower);
 
@@ -382,7 +383,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             DcMotorUtil.setMotorsPower(this.leftMotors, leftPower);
 
             // Calculate right motors power and set motors:
-            double rightPower = Range.clip(rotationPower, -1, 1);
+            double rightPower = -Range.clip(rotationPower, -1, 1);
             telemetry.addData("Right Motor Power", rightPower);
             Log.d(LOG_TAG, "Right Motor Power: " + rightPower);
             DcMotorUtil.setMotorsPower(this.rightMotors, rightPower);
@@ -447,6 +448,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         this.rightMotors.add(hardwareMap.dcMotor.get("frontRight"));
         //this.rightMotors.add(hardwareMap.dcMotor.get("backRight"));
         DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
+        DcMotorUtil.setMotorsDirection(this.rightMotors, DcMotorSimple.Direction.REVERSE);
         //      Sensors:
         //          IMU:
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
