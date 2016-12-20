@@ -28,7 +28,11 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
- * Created by luciengaitskell on 11/24/16.
+ * An abstract OpMode which allows for autonomous navigation of the competition bot.
+ * It is made for implementation and setting of the un-initialized variables.
+ *
+ * @author luciengaitskell
+ * @since 161124
  */
 
 public abstract class CompetitionBotAutonomous extends LinearOpMode {
