@@ -158,7 +158,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
                     break;
                 }
 
-                // Drive motors by designated motor power (in right direction)
+                // Drive motors by designated motor power:
                 DcMotorUtil.setMotorsPower(this.leftMotors, motorPower * Math.signum(leftChange));
                 DcMotorUtil.setMotorsPower(this.rightMotors, motorPower * Math.signum(rightChange));
             } else {  // This means that there was no encoder data:
@@ -274,8 +274,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             Log.d(LOG_TAG, "Rotation Angle: " + rotationAngle + " > Minimum Rot: " + MINIMUM_ROTATION_DIFF);
         }
 
-        // Calculate left motors power and set motors the reverse rotation of the motors
-        //  cancels out the negatives:
+        // Calculate left motors power and set motors:
         double leftPower = Range.clip(rotationPower, -1, 1);
         telemetry.addData("Left Motor Power", leftPower);
         DcMotorUtil.setMotorsPower(this.leftMotors, leftPower);
@@ -375,8 +374,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
                 break;
             }
 
-            // Calculate left motors power and set motors the reverse rotation of the motors
-            //  cancels out the negatives:
+            // Calculate left motors power and set motors:
             double leftPower = Range.clip(rotationPower, -1, 1);
             telemetry.addData("Left Motor Power", leftPower);
             Log.d(LOG_TAG, "Left Motor Power: " + leftPower);
@@ -448,6 +446,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         this.rightMotors.add(hardwareMap.dcMotor.get("frontRight"));
         //this.rightMotors.add(hardwareMap.dcMotor.get("backRight"));
         DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
+        //          Reverse right motor:
         DcMotorUtil.setMotorsDirection(this.rightMotors, DcMotorSimple.Direction.REVERSE);
         //      Sensors:
         //          IMU:
