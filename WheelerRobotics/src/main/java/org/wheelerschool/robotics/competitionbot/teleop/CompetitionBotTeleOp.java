@@ -43,7 +43,6 @@ public class CompetitionBotTeleOp extends OpMode {
         DcMotorUtil.setMotorsRunMode(leftMotors, DcMotor.RunMode.RUN_USING_ENCODER);
         rightMotors = CompetitionBotConfig.getRightMotors(hardwareMap);
         DcMotorUtil.setMotorsRunMode(rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
-        DcMotorUtil.setMotorsDirection(rightMotors, DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
