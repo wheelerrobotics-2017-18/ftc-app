@@ -36,14 +36,8 @@ import java.util.concurrent.Callable;
  */
 
 public abstract class CompetitionBotAutonomous extends LinearOpMode {
-    // Variables to set when extending class:
     /**
-     * What to set:
-     *  1. closeMotors
-     *  2. fartherMotors
-     *  3. sideUltrasonicSensor
-     *  4. FIRST_BEACON_LOCATION
-     *  5. PRE_WALL_FOLLOW_ANGLE
+     * Make sure to set all configuration variables below:
      */
     //      Wall Follow Motors:
     public List<DcMotor> closeMotors;
