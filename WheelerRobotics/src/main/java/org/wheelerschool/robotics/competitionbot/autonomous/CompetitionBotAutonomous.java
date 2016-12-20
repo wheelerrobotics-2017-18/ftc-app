@@ -47,9 +47,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
      */
     //      Wall Follow Motors:
     public List<DcMotor> closeMotors;
-    public double closeMotorGain;
     public List<DcMotor> fartherMotors;
-    public double fartherMotorGain;
     //      Sensors:
     public UltrasonicSensor sideUltrasonicSensor;
     //      Other:
@@ -412,9 +410,6 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             // Get motor power:
             ConstantDistanceMotorNavigation.NavigationData navigationData =
                     constantDistanceNavigation.calculateNavigationData(WALL_FOLLOW_FRONT_SPEED, sideUltrasonicLevel);
-            //      Factor in gain:
-            navigationData.closerMotorPower = navigationData.closerMotorPower * this.closeMotorGain;
-            navigationData.fartherMotorPower = navigationData.fartherMotorPower * this.fartherMotorGain;
             // Set motors power:
             DcMotorUtil.setMotorsPower(this.closeMotors, navigationData.closerMotorPower);
             DcMotorUtil.setMotorsPower(this.fartherMotors, navigationData.fartherMotorPower);
