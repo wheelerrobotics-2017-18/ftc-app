@@ -3,6 +3,7 @@ package org.wheelerschool.robotics.competitionbot.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.wheelerschool.robotics.competitionbot.CompetitionBotConfig;
 import org.wheelerschool.robotics.library.util.DcMotorUtil;
@@ -42,6 +43,7 @@ public class CompetitionBotTeleOp extends OpMode {
         DcMotorUtil.setMotorsRunMode(leftMotors, DcMotor.RunMode.RUN_USING_ENCODER);
         rightMotors = CompetitionBotConfig.getRightMotors(hardwareMap);
         DcMotorUtil.setMotorsRunMode(rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
+        DcMotorUtil.setMotorsDirection(rightMotors, DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class CompetitionBotTeleOp extends OpMode {
 
         // Drive Motors:
         DcMotorUtil.setMotorsPower(leftMotors, gamepad1.left_stick_y * driveMotorGain);
-        DcMotorUtil.setMotorsPower(rightMotors, -gamepad1.right_stick_y * driveMotorGain);
+        DcMotorUtil.setMotorsPower(rightMotors, gamepad1.right_stick_y * driveMotorGain);
 
         telemetry.addData("Left Motors Encoder", DcMotorUtil.getMotorsPosition(leftMotors));
         telemetry.addData("Right Motors Encoder", DcMotorUtil.getMotorsPosition(rightMotors));
