@@ -10,7 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by luciengaitskell on 12/16/16.
+ * An OpMode which allows for control of the launcher on the competition bot.
+ *
+ * @author luciengaitskell
+ * @since 161216
  */
 
 @TeleOp
