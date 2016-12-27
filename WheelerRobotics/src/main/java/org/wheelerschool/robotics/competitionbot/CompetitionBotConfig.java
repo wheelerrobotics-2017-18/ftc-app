@@ -22,13 +22,13 @@ public class CompetitionBotConfig {
     public static List<DcMotor> getLeftMotors(HardwareMap hardwareMap) {
         List<DcMotor> motors = new ArrayList<>();
         motors.add(hardwareMap.dcMotor.get("backLeft"));
+        DcMotorUtil.setMotorsDirection(motors, DcMotorSimple.Direction.REVERSE);
         return motors;
     }
 
     public static List<DcMotor> getRightMotors(HardwareMap hardwareMap) {
         List<DcMotor> motors = new ArrayList<>();
         motors.add(hardwareMap.dcMotor.get("backRight"));
-        DcMotorUtil.setMotorsDirection(motors, DcMotorSimple.Direction.REVERSE);
         return motors;
     }
 }
