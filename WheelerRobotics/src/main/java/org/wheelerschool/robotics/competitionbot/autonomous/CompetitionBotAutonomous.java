@@ -138,13 +138,17 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
             // Check if encoder value was returned:
             if (leftEncoder != null && rightEncoder != null) {
+                telemetry.addData("Left Encoders", leftEncoder);
                 Log.d(LOG_TAG, "Left Encoders Average: " + leftEncoder);
+                telemetry.addData("Right Encoders", rightEncoder);
                 Log.d(LOG_TAG, "Right Encoders Average: " + rightEncoder);
 
                 long leftChange = encoderVal - leftEncoder;
                 long rightChange = encoderVal - rightEncoder;
 
+                telemetry.addData("Left Encoders Change", leftChange);
                 Log.d(LOG_TAG, "Left Encoders Change: " + leftChange);
+                telemetry.addData("Right Encoders Change", rightChange);
                 Log.d(LOG_TAG, "Right Encoders Change: " + rightChange);
 
                 // Break if both sides at final position:
@@ -161,6 +165,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
                 Log.w(LOG_TAG, "ENCODER DRIVE: NO ENCODER DATA!");
                 break;
             }
+
+            telemetry.update();
         }
 
         // Stop motors:
