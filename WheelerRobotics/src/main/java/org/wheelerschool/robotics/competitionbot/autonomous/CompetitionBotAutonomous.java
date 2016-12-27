@@ -83,6 +83,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     private static double MINIMUM_ROTATION_DIFF = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 5);
     private static double ROBOT_ROTATION_GAIN = 1.5;
     private static long MINIMUM_ENCODER_DRIVE_VALUE = 50;
+    private static long ENCODER_DRIVE_RAMP_DOWN_VALUE = 3000;
     private static double WALL_FOLLOW_FRONT_SPEED = 0.25;
     private static double NOMINAL_DISTANCE = 20;
     private static double MAXIMUM_DISTANCE = 60;
@@ -116,6 +117,16 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     }
 
     /*------------------------------------AUTONOMOUS SECTIONS-------------------------------------*/
+
+    private double __calculateEncoderDriveMotorGain(long encoderChange) {
+        double motorGain = 1 * Math.signum(encoderChange);
+        if (encoderChange < ENCODER_DRIVE_RAMP_DOWN_VALUE) {
+            Log.d(LOG_TAG, "Encoder Ramp Down!");
+            motorGain = motorGain * Math.abs(encoderChange) / ENCODER_DRIVE_RAMP_DOWN_VALUE;
+        }
+
+        return motorGain;
+    }
 
     private void driveForwardByEncoder(double motorPower, double differentialGain, long encoderVal) throws InterruptedException {
         // Reset Encoders:
@@ -158,9 +169,12 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
                     break;
                 }
 
+                double leftMotorGain = __calculateEncoderDriveMotorGain(leftChange);
+                double rightMotorGain = __calculateEncoderDriveMotorGain(rightChange);
+
                 // Drive motors by designated motor power:
-                DcMotorUtil.setMotorsPower(this.leftMotors, differentialGain * motorPower * Math.signum(leftChange));
-                DcMotorUtil.setMotorsPower(this.rightMotors, (1/differentialGain) * motorPower * Math.signum(rightChange));
+                DcMotorUtil.setMotorsPower(this.leftMotors, differentialGain * motorPower * leftMotorGain);
+                DcMotorUtil.setMotorsPower(this.rightMotors, (1/differentialGain) * motorPower * rightMotorGain);
             } else {  // This means that there was no encoder data:
                 Log.w(LOG_TAG, "ENCODER DRIVE: NO ENCODER DATA!");
                 break;
