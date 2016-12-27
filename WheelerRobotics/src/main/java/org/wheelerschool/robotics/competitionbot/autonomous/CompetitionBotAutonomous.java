@@ -117,7 +117,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
     /*------------------------------------AUTONOMOUS SECTIONS-------------------------------------*/
 
-    private void driveForwardByEncoder(double motorPower, long encoderVal) throws InterruptedException {
+    private void driveForwardByEncoder(double motorPower, double differentialGain, long encoderVal) throws InterruptedException {
         // Reset Encoders:
         DcMotorUtil.setMotorsRunMode(this.leftMotors, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -159,8 +159,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
                 }
 
                 // Drive motors by designated motor power:
-                DcMotorUtil.setMotorsPower(this.leftMotors, motorPower * Math.signum(leftChange));
-                DcMotorUtil.setMotorsPower(this.rightMotors, motorPower * Math.signum(rightChange));
+                DcMotorUtil.setMotorsPower(this.leftMotors, differentialGain * motorPower * Math.signum(leftChange));
+                DcMotorUtil.setMotorsPower(this.rightMotors, (1/differentialGain) * motorPower * Math.signum(rightChange));
             } else {  // This means that there was no encoder data:
                 Log.w(LOG_TAG, "ENCODER DRIVE: NO ENCODER DATA!");
                 break;
@@ -476,7 +476,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
         // Autonomous Sections:
         // Drive forward by encoder counts:
-        driveForwardByEncoder(0.4, 6700);
+        driveForwardByEncoder(0.6, 0.9, 6700);
 
         // Rotate robot to angle towards beacon
         rotateRobotIMU(AFTER_ENCODER_ROTATE_ANGLE, 1);
