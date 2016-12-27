@@ -82,7 +82,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     private static double NO_BEACON_ROTATE_SPEED = 0.25;
     private static double MINIMUM_ROTATION_DIFF = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 5);
     private static double ROBOT_ROTATION_GAIN = 1.5;
-    private static long MINIMUM_ENCODER_DRIVE_VALUE = 50;
+    private static long MINIMUM_ENCODER_DRIVE_VALUE = 150;
     private static long ENCODER_DRIVE_RAMP_DOWN_VALUE = 3000;
     private static double WALL_FOLLOW_FRONT_SPEED = 0.25;
     private static double NOMINAL_DISTANCE = 20;
