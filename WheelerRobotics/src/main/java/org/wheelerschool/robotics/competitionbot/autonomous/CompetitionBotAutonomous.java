@@ -59,9 +59,9 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     //      Motor:
     public List<DcMotor> leftMotors = new ArrayList<>();
     public List<DcMotor> rightMotors = new ArrayList<>();
-    //      Sensors
+    //      Sensors:
     OpticalDistanceSensor groundReflectSensor;
-    //        IMU:
+    //          IMU:
     BNO055IMU imu;
 
     // Setup:
