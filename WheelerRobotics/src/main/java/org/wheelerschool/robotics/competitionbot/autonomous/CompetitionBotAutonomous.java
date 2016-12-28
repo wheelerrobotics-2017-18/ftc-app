@@ -491,7 +491,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
         // Autonomous Sections:
         // Drive forward by encoder counts:
-        driveForwardByEncoder(0.6, 0.9, 6700);
+        driveForwardByEncoder(0.6, 1, 6500);
 
         // Rotate robot to angle towards beacon
         rotateRobotIMU(AFTER_ENCODER_ROTATE_ANGLE, 1);
