@@ -27,9 +27,9 @@ public class CompetitionBotTeleOp extends OpMode {
     private List<DcMotor> collectorMotors;
 
     // Drive Motors:
-    private double driveMotorGain = 0.5;
     private List<DcMotor> leftMotors;
     private List<DcMotor> rightMotors;
+    private double driveMotorGain = 1;
 
 
     @Override
