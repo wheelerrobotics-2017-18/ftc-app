@@ -14,7 +14,7 @@ import org.wheelerschool.robotics.library.vision.VuforiaLocation;
  */
 
 @Autonomous
-public class CompetitionBotAutonomousBlue extends CompetitionBotAutonomous {
+public class CompetitionBotAutonomousRed extends CompetitionBotAutonomous {
     @Override
     public void runOpMode() throws InterruptedException {
         // Sensor Setup:
