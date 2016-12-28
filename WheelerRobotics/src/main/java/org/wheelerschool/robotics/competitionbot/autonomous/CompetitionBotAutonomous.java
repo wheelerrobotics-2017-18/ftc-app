@@ -511,8 +511,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         // Drive in to press beacon:
         robotRot = driveToPosition(FIRST_BEACON_PRESS_LOCATION, 1.5);
 
-        DcMotorUtil.setMotorsPower(this.leftMotors, 0);
-        DcMotorUtil.setMotorsPower(this.rightMotors, 0);
+        idleMotors();
         Log.d(LOG_TAG, "CLICK BEACON ONE HERE!");
         Thread.sleep(5000);
 
