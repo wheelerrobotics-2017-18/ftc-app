@@ -5,8 +5,10 @@ import android.util.Log;
 import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Range;
@@ -63,6 +65,9 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     OpticalDistanceSensor groundReflectSensor;
     //          IMU:
     BNO055IMU imu;
+    //          Color Sensors:
+    ColorSensor colorSensorLeft;
+    ColorSensor colorSensorRight;
 
     // Setup:
     //      Phone Location
@@ -450,6 +455,21 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         }
     }
 
+    // Color Detection:
+    private void detectColor() {
+        double redOnLeft = colorSensorLeft.red() - colorSensorRight.red();
+        double blueOnRight = colorSensorRight.blue() - colorSensorLeft.blue();
+
+        if (Math.signum((redOnLeft + blueOnRight) / 2) == 1) {
+            // This means that red is most likely on the left, and blue is on the right
+            Log.d(LOG_TAG, "Red left, blue right");
+        } else {
+            // This means that blue is most likely on the left, and red is on the right
+            Log.d(LOG_TAG, "Blue left, red right");
+        }
+    }
+
+
     // OpMode:
     public void runOpMode() throws InterruptedException {
         // Hardware Setup:
@@ -476,6 +496,15 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         imu.initialize(parameters);
         //          ODS:
         this.groundReflectSensor = hardwareMap.opticalDistanceSensor.get("groundODS");
+        //          Color Sensor:
+        /// NOTE: Color sensors are flipped, because they are on a side referenced to the front
+        ///     of the robot:
+        colorSensorLeft = hardwareMap.colorSensor.get("colorRight");
+        colorSensorLeft.setI2cAddress(I2cAddr.create7bit(0x1e));
+        colorSensorLeft.enableLed(false);
+        colorSensorRight = hardwareMap.colorSensor.get("colorLeft");
+        colorSensorRight.setI2cAddress(I2cAddr.create7bit(0x1f));
+        colorSensorRight.enableLed(false);
 
         // Wait for start button to be pushed:
         LinearOpModeUtil.runWhileWait(this, new Callable<Void>() {
@@ -513,6 +542,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
         idleMotors();
         Log.d(LOG_TAG, "CLICK BEACON ONE HERE!");
+
+        detectColor();
         Thread.sleep(5000);
 
         robotRot = driveToPosition(FIRST_BEACON_LOCATION, 2);
@@ -548,6 +579,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
             driveToPosition(SECOND_BEACON_PRESS_LOCATION, 1);
             Log.d(LOG_TAG, "CLICK BEACON TWO HERE!");
+
+            detectColor();
         } else {  // This means that the drive to position was interrupted:
             Log.e(LOG_TAG, "Final Robot angle was 'null' (interrupted). ENDING!");
         }
