@@ -79,6 +79,8 @@ public class CompetitionBotTeleOp extends OpMode {
             robot.setRobotDirection(robotForward);
         }
 
+        telemetry.addData("Robot Forward", robotForward);
+
         // Drive Motors:
         double leftSpeed = gamepad1.left_stick_y * driveMotorGain;
         telemetry.addData("Left Speed", leftSpeed);
