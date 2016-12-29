@@ -65,7 +65,7 @@ public class CompetitionBotConfig {
         // Drive Motors:
         this.leftMotors.add(this.hardwareMap.dcMotor.get("backLeft"));
         this.rightMotors.add(this.hardwareMap.dcMotor.get("backRight"));
-        // Set robot direction to default:
+        // Set robot direction:
         setRobotDirection(robotForwards);
 
         DcMotorUtil.setMotorsRunMode(this.leftMotors, DcMotor.RunMode.RUN_USING_ENCODER);
