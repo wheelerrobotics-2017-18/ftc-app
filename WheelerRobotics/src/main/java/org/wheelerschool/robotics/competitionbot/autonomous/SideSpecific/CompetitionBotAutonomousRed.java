@@ -30,6 +30,7 @@ public class CompetitionBotAutonomousRed extends CompetitionBotAutonomous {
         this.sideUltrasonicSensor = hardwareMap.ultrasonicSensor.get("rightUltrasound");
         this.closeMotors = this.leftMotors;
         this.fartherMotors = this.rightMotors;
+        this.DESIRED_BEACON_COLOR = new int[] {4, 0, 0};
 
         super.runOpMode();
     }
