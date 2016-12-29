@@ -13,18 +13,16 @@ import com.qualcomm.robotcore.util.Range;
 
 public class ConstantDistanceMotorNavigation {
     // Configuration:
-    public double ROTATION_GAIN = 2.5; // GAIN for the ROTATION amount
-    // Other:
     public static String LOG_TAG = "Motor Nav Calculation";
 
     // Constructor Set Config Values:
     private double nominalDistance;
-    private double maximumDistance;
+    private double maximumValueSeparation;
 
 
-    public ConstantDistanceMotorNavigation(double nominalDistance, double maximumDistance) {
+    public ConstantDistanceMotorNavigation(double nominalDistance, double maximumValueSeparation) {
         this.nominalDistance = nominalDistance;
-        this.maximumDistance = maximumDistance;
+        this.maximumValueSeparation = maximumValueSeparation;
     }
 
     public class NavigationData {
@@ -41,14 +39,12 @@ public class ConstantDistanceMotorNavigation {
         NavigationData navigationData = new NavigationData();
 
         // Calculate rotation power and clip to minimum and maximum values:
-        navigationData.rotationPower = Range.clip((sideDistance - this.nominalDistance),
-                -this.maximumDistance, this.maximumDistance);
-        // Convert to -1 -> 1 value:
-        navigationData.rotationPower = navigationData.rotationPower / this.maximumDistance;
+        double valueSeparation = (sideDistance - this.nominalDistance);
+        // Calculate rotation power (center value: 0):
+        navigationData.rotationPower = Range.clip(valueSeparation / this.maximumValueSeparation, -1, 1);
 
         // Farther motor power calculation:
-        navigationData.closerMotorPower = (forwardPower) -
-                (navigationData.rotationPower * ROTATION_GAIN);
+        navigationData.closerMotorPower = (forwardPower) * (1 - navigationData.rotationPower);
         if (Math.abs(navigationData.closerMotorPower) > 1) {
             Log.w(LOG_TAG, "CLOSER MOTOR BANDED!");
         }
@@ -56,8 +52,7 @@ public class ConstantDistanceMotorNavigation {
         navigationData.closerMotorPower = Range.clip(navigationData.closerMotorPower, -1, 1);
 
         // Farther motor power calulation:
-        navigationData.fartherMotorPower = (forwardPower) +
-                (navigationData.rotationPower * ROTATION_GAIN);
+        navigationData.fartherMotorPower = (forwardPower) * (1 + navigationData.rotationPower);
         if (Math.abs(navigationData.closerMotorPower) > 1) {
             Log.w(LOG_TAG, "FARTHER MOTOR BANDED!");
         }
