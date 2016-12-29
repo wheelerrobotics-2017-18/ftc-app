@@ -201,6 +201,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         // Translation Navigation Setup:
         TranslationMotorNavigation translationNavigation = new TranslationMotorNavigation();
         translationNavigation.MIN_DRIVE_DISTANCE = 50;
+        translationNavigation.ROTATION_IGNORE_DISTANCE = 60;
         translationNavigation.DEFAULT_ROTATION_GAIN = 1;
 
         long time = System.currentTimeMillis();
