@@ -19,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.wheelerschool.robotics.competitionbot.CompetitionBotConfig;
 import org.wheelerschool.robotics.library.navigation.ConstantDistanceMotorNavigation;
 import org.wheelerschool.robotics.library.navigation.TranslationMotorNavigation;
 import org.wheelerschool.robotics.library.util.DcMotorUtil;
@@ -58,6 +59,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
 
     // Hardware Setup:
+    //      Robot:
+    public CompetitionBotConfig robot;
     //      Motor:
     public List<DcMotor> leftMotors = new ArrayList<>();
     public List<DcMotor> rightMotors = new ArrayList<>();
@@ -96,8 +99,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
 
     private void idleMotors() {
-        DcMotorUtil.setMotorsPower(this.leftMotors, 0);
-        DcMotorUtil.setMotorsPower(this.rightMotors, 0);
+        DcMotorUtil.setMotorsPower(robot.leftMotors, 0);
+        DcMotorUtil.setMotorsPower(robot.rightMotors, 0);
     }
 
     private void noTargetSearchRotate() throws InterruptedException {
@@ -106,15 +109,15 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         Log.d("Vuforia Data", "Lost beacon (" + MAX_TIME_TIMEOUT + "ms). Rotating...");
 
         // Set motors to rotate:
-        DcMotorUtil.setMotorsPower(this.leftMotors, NO_BEACON_ROTATE_SPEED);
-        DcMotorUtil.setMotorsPower(this.rightMotors, -NO_BEACON_ROTATE_SPEED);
+        DcMotorUtil.setMotorsPower(robot.leftMotors, NO_BEACON_ROTATE_SPEED);
+        DcMotorUtil.setMotorsPower(robot.rightMotors, -NO_BEACON_ROTATE_SPEED);
 
         // Sleep to allow for rotation:
         Thread.sleep(200);
 
         // Stop motors:
-        DcMotorUtil.setMotorsPower(this.leftMotors, 0);
-        DcMotorUtil.setMotorsPower(this.rightMotors, 0);
+        DcMotorUtil.setMotorsPower(robot.leftMotors, 0);
+        DcMotorUtil.setMotorsPower(robot.rightMotors, 0);
         Log.d("Vuforia Data", "Ended Rotation");
 
         // Wait to allow camera to adjust and acquire a lock on a target
@@ -135,22 +138,22 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
     private void driveForwardByEncoder(double motorPower, double differentialGain, long encoderVal) throws InterruptedException {
         // Reset Encoders:
-        DcMotorUtil.setMotorsRunMode(this.leftMotors, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        DcMotorUtil.setMotorsRunMode(robot.leftMotors, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        DcMotorUtil.setMotorsRunMode(robot.rightMotors, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Thread.sleep(50);  // Wait for reset to occur...
         // Change mode to run using the encoders:
-        DcMotorUtil.setMotorsRunMode(this.leftMotors, DcMotor.RunMode.RUN_USING_ENCODER);
-        DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
+        DcMotorUtil.setMotorsRunMode(robot.leftMotors, DcMotor.RunMode.RUN_USING_ENCODER);
+        DcMotorUtil.setMotorsRunMode(robot.rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Log the info:
         Log.i(LOG_TAG, "RESET LEFT/RIGHT MOTOR ENCODERS");
-        Log.i(LOG_TAG, "Left Encoders Average: " + DcMotorUtil.getMotorsPosition(this.leftMotors));
-        Log.i(LOG_TAG, "Right Encoders Average: " + DcMotorUtil.getMotorsPosition(this.rightMotors));
+        Log.i(LOG_TAG, "Left Encoders Average: " + DcMotorUtil.getMotorsPosition(robot.leftMotors));
+        Log.i(LOG_TAG, "Right Encoders Average: " + DcMotorUtil.getMotorsPosition(robot.rightMotors));
 
         while (opModeIsActive()) {
             // Get encoder values:
-            Long leftEncoder = DcMotorUtil.getMotorsPosition(this.leftMotors);
-            Long rightEncoder = DcMotorUtil.getMotorsPosition(this.rightMotors);
+            Long leftEncoder = DcMotorUtil.getMotorsPosition(robot.leftMotors);
+            Long rightEncoder = DcMotorUtil.getMotorsPosition(robot.rightMotors);
 
             // Check if encoder value was returned:
             if (leftEncoder != null && rightEncoder != null) {
@@ -178,8 +181,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
                 double rightMotorGain = __calculateEncoderDriveMotorGain(rightChange);
 
                 // Drive motors by designated motor power:
-                DcMotorUtil.setMotorsPower(this.leftMotors, differentialGain * motorPower * leftMotorGain);
-                DcMotorUtil.setMotorsPower(this.rightMotors, (1/differentialGain) * motorPower * rightMotorGain);
+                DcMotorUtil.setMotorsPower(robot.leftMotors, differentialGain * motorPower * leftMotorGain);
+                DcMotorUtil.setMotorsPower(robot.rightMotors, (1/differentialGain) * motorPower * rightMotorGain);
             } else {  // This means that there was no encoder data:
                 Log.w(LOG_TAG, "ENCODER DRIVE: NO ENCODER DATA!");
                 break;
@@ -252,8 +255,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
                 telemetry.addData("Robot Y", y);
 
                 // Drive Motors:
-                DcMotorUtil.setMotorsPower(this.leftMotors, calculationData.leftMotorPower);
-                DcMotorUtil.setMotorsPower(this.rightMotors, calculationData.rightMotorPower);
+                DcMotorUtil.setMotorsPower(robot.leftMotors, calculationData.leftMotorPower);
+                DcMotorUtil.setMotorsPower(robot.rightMotors, calculationData.rightMotorPower);
             }
 
             // If target are not seen after some amount of time, rotate to find one:
@@ -299,12 +302,12 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         // Calculate left motors power and set motors:
         double leftPower = Range.clip(rotationPower, -1, 1);
         telemetry.addData("Left Motor Power", leftPower);
-        DcMotorUtil.setMotorsPower(this.leftMotors, leftPower);
+        DcMotorUtil.setMotorsPower(robot.leftMotors, leftPower);
 
         // Calculate right motors power and set motors:
         double rightPower = -Range.clip(rotationPower, -1, 1);
         telemetry.addData("Right Motor Power", rightPower);
-        DcMotorUtil.setMotorsPower(this.rightMotors, rightPower);
+        DcMotorUtil.setMotorsPower(robot.rightMotors, rightPower);
 
         return false;
     }
@@ -400,13 +403,13 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             double leftPower = Range.clip(rotationPower, -1, 1);
             telemetry.addData("Left Motor Power", leftPower);
             Log.d(LOG_TAG, "Left Motor Power: " + leftPower);
-            DcMotorUtil.setMotorsPower(this.leftMotors, leftPower);
+            DcMotorUtil.setMotorsPower(robot.leftMotors, leftPower);
 
             // Calculate right motors power and set motors:
             double rightPower = -Range.clip(rotationPower, -1, 1);
             telemetry.addData("Right Motor Power", rightPower);
             Log.d(LOG_TAG, "Right Motor Power: " + rightPower);
-            DcMotorUtil.setMotorsPower(this.rightMotors, rightPower);
+            DcMotorUtil.setMotorsPower(robot.rightMotors, rightPower);
 
             // Update telemetry:
             telemetry.update();
@@ -472,15 +475,12 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     // OpMode:
     public void runOpMode() throws InterruptedException {
         // Hardware Setup:
-        //      Motors:
-        this.leftMotors.add(hardwareMap.dcMotor.get("backRight"));
-        //this.leftMotors.add(hardwareMap.dcMotor.get("backLeft"));
-        DcMotorUtil.setMotorsRunMode(this.leftMotors, DcMotor.RunMode.RUN_USING_ENCODER);
-        this.rightMotors.add(hardwareMap.dcMotor.get("backLeft"));
-        //this.rightMotors.add(hardwareMap.dcMotor.get("backRight"));
-        DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
-        //          Reverse right motor:
-        DcMotorUtil.setMotorsDirection(this.rightMotors, DcMotorSimple.Direction.REVERSE);
+        //      Robot:
+        robot = new CompetitionBotConfig(hardwareMap, false);
+
+        //      Motors (for reference in extending an class to set the closer and farther motors):
+        this.leftMotors.addAll(robot.leftMotors);
+        this.rightMotors.addAll(robot.rightMotors);
         //      Sensors:
         //          IMU:
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
