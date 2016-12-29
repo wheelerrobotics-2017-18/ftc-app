@@ -56,6 +56,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     public double POST_WALL_FOLLOW_ROTATE_ANGLE; // (relative)
     public VectorF SECOND_BEACON_INITIAL_LOCATION;
     public VectorF SECOND_BEACON_PRESS_LOCATION;
+    public int[] DESIRED_BEACON_COLOR;
 
 
     // Hardware Setup:
@@ -458,17 +459,48 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         }
     }
 
-    // Color Detection:
-    private void detectColor() {
-        double redOnLeft = colorSensorLeft.red() - colorSensorRight.red();
-        double blueOnRight = colorSensorRight.blue() - colorSensorLeft.blue();
+    private void __logColorSensorValue(String colorSensorName, String valueName, int value) {
+        Log.d(LOG_TAG, colorSensorName + " Color Sensor " + valueName + ": " + value);
+    }
+    private int __calculateColorSensorDisparity(ColorSensor colorSensor, String colorSensorName) {
+        int disparity = 0;
+        int red = colorSensor.red();
+        __logColorSensorValue(colorSensorName, "red", red);
+        disparity += Math.abs(this.DESIRED_BEACON_COLOR[0] - red);
+        int green = colorSensor.green();
+        __logColorSensorValue(colorSensorName, "green", green);
+        disparity += Math.abs(this.DESIRED_BEACON_COLOR[1] - green);
+        int blue = colorSensor.blue();
+        __logColorSensorValue(colorSensorName, "blue", blue);
+        disparity += Math.abs(this.DESIRED_BEACON_COLOR[2] - blue);
 
-        if (Math.signum((redOnLeft + blueOnRight) / 2) == 1) {
-            // This means that red is most likely on the left, and blue is on the right
-            Log.d(LOG_TAG, "Red left, blue right");
+        Log.d(LOG_TAG, colorSensorName + " Color Sensor Disparity: " + disparity);
+        return disparity;
+    }
+
+    private void __pushBeaconAndWait(CompetitionBotConfig.AdvancedServo advancedServo)
+            throws InterruptedException {
+        advancedServo.activatePusher(true);
+        Thread.sleep(1000);
+        advancedServo.activatePusher(false);
+    }
+
+    // Color Detection / Beacon Push:
+    private void pushBeacon() throws InterruptedException {
+        // Calculate the disparity between the color sensor disparity:
+        ///  NOTE: Negative means desired color is more likely on the left, positive is the opposite
+        int disparityDisparity = __calculateColorSensorDisparity(colorSensorLeft, "Left")
+                - __calculateColorSensorDisparity(colorSensorRight, "Right");
+
+        Log.d(LOG_TAG, "Disparity Disparity: " + disparityDisparity);
+        if (Integer.signum(disparityDisparity) == -1) {
+            Log.d(LOG_TAG, "Desired Color on Left");
+            __pushBeaconAndWait(robot.pusherLeft);
+        } if (Integer.signum(disparityDisparity) == 1){
+            Log.d(LOG_TAG, "Desired Color on Right");
+            __pushBeaconAndWait(robot.pusherRight);
         } else {
-            // This means that blue is most likely on the left, and red is on the right
-            Log.d(LOG_TAG, "Blue left, red right");
+            Log.d(LOG_TAG, "Equal Desired Color -- Skipping!");
         }
     }
 
@@ -479,6 +511,9 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         //      Robot:
         robot = new CompetitionBotConfig(hardwareMap, false);
 
+        //      Reset Beacon Pushers:
+        robot.pusherLeft.activatePusher(false);
+        robot.pusherRight.activatePusher(false);
         //      Motors (for reference in extending an class to set the closer and farther motors):
         this.leftMotors.addAll(robot.leftMotors);
         this.rightMotors.addAll(robot.rightMotors);
@@ -543,8 +578,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         idleMotors();
         Log.d(LOG_TAG, "CLICK BEACON ONE HERE!");
 
-        detectColor();
-        Thread.sleep(5000);
+        pushBeacon();
 
         robotRot = driveToPosition(FIRST_BEACON_LOCATION, 2);
 
@@ -580,7 +614,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             driveToPosition(SECOND_BEACON_PRESS_LOCATION, 1);
             Log.d(LOG_TAG, "CLICK BEACON TWO HERE!");
 
-            detectColor();
+            pushBeacon();
         } else {  // This means that the drive to position was interrupted:
             Log.e(LOG_TAG, "Final Robot angle was 'null' (interrupted). ENDING!");
         }
