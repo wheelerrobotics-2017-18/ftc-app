@@ -74,6 +74,7 @@ public class CompetitionBotConfig {
 
     public void setRobotDirection(boolean forwards) {
         if (robotForwards != forwards) {
+            robotForwards = forwards;
             List<DcMotor> newRightMotors = this.leftMotors;
             List<DcMotor> newLeftMotors = this.rightMotors;
             this.leftMotors = newLeftMotors;
