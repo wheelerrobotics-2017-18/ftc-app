@@ -42,7 +42,7 @@ public class CompetitionBotConfig {
     public AdvancedServo pusherRight;
 
     public static boolean defaultRobotForwards = true;
-    private boolean robotForwards = defaultRobotForwards;
+    public boolean robotForwards = defaultRobotForwards;
     public List<DcMotor> leftMotors = new ArrayList<>();
     public List<DcMotor> rightMotors = new ArrayList<>();
 
