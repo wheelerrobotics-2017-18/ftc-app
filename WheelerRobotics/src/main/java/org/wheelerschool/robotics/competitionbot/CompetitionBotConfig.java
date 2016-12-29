@@ -43,8 +43,8 @@ public class CompetitionBotConfig {
 
     public static boolean defaultRobotForwards = true;
     private boolean robotForwards = defaultRobotForwards;
-    public List<DcMotor> leftMotors;
-    public List<DcMotor> rightMotors;
+    public List<DcMotor> leftMotors = new ArrayList<>();
+    public List<DcMotor> rightMotors = new ArrayList<>();
 
     public CompetitionBotConfig(HardwareMap hardwareMap) {
         this(hardwareMap, defaultRobotForwards);
@@ -63,9 +63,7 @@ public class CompetitionBotConfig {
         this.pusherRight.extendedPos = 1;
 
         // Drive Motors:
-        this.leftMotors = new ArrayList<>();
         this.leftMotors.add(this.hardwareMap.dcMotor.get("backLeft"));
-        this.rightMotors = new ArrayList<>();
         this.rightMotors.add(this.hardwareMap.dcMotor.get("backRight"));
         // Set robot direction to default:
         setRobotDirection(robotForwards);
