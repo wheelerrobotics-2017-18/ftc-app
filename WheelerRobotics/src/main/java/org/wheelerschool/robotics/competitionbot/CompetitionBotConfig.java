@@ -81,7 +81,7 @@ public class CompetitionBotConfig {
             this.rightMotors = newRightMotors;
         }
 
-        DcMotorUtil.setMotorsDirection(this.leftMotors, DcMotorSimple.Direction.REVERSE);
-        DcMotorUtil.setMotorsDirection(this.rightMotors, DcMotorSimple.Direction.FORWARD);
+        DcMotorUtil.setMotorsDirection(this.leftMotors, DcMotorSimple.Direction.FORWARD);
+        DcMotorUtil.setMotorsDirection(this.rightMotors, DcMotorSimple.Direction.REVERSE);
     }
 }
