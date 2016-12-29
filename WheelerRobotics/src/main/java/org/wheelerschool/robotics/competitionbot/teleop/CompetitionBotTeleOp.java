@@ -74,7 +74,7 @@ public class CompetitionBotTeleOp extends OpMode {
         // Drive Direction Set:
         JoystickButtonUpdated.JoystickButtonData robotDirectionReveseButtonData =
                 robotDirectionReveseButton.getValueIgnoreException();
-        if (robotDirectionReveseButtonData.isButtonStateNew) {
+        if (robotDirectionReveseButtonData.isButtonStateNew && robotDirectionReveseButtonData.buttonState) {
             robotForward = !robotForward;
             robot.setRobotDirection(robotForward);
         }
