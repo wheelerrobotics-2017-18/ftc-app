@@ -1,5 +1,6 @@
 package org.wheelerschool.robotics.competitionbot;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -48,6 +49,8 @@ public class CompetitionBotConfig {
 
     public List<DcMotor> launcherMotors = new ArrayList<>();
 
+    public CRServo feederServo;
+
     public CompetitionBotConfig(HardwareMap hardwareMap) {
         this(hardwareMap, defaultRobotForwards);
     }
@@ -77,6 +80,9 @@ public class CompetitionBotConfig {
         launcherMotors.add(hardwareMap.dcMotor.get("launcherLeft"));
         launcherMotors.add(hardwareMap.dcMotor.get("launcherRight"));
         DcMotorUtil.setMotorsDirection(launcherMotors, DcMotorSimple.Direction.REVERSE);
+
+        // Launcher Feed Servo:
+        feederServo = hardwareMap.crservo.get("feeder");
     }
 
     public void setRobotDirection(boolean forwards) {
