@@ -496,7 +496,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         if (Integer.signum(disparityDisparity) == -1) {
             Log.d(LOG_TAG, "Desired Color on Left");
             __pushBeaconAndWait(robot.pusherLeft);
-        } if (Integer.signum(disparityDisparity) == 1){
+        } else if (Integer.signum(disparityDisparity) == 1){
             Log.d(LOG_TAG, "Desired Color on Right");
             __pushBeaconAndWait(robot.pusherRight);
         } else {
