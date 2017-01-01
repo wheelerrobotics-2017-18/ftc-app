@@ -42,6 +42,9 @@ public class CompetitionBotTeleOp extends OpMode {
     // Launcher Motors:
     private double launcherMotorGain = -0.8;
 
+    // Feeder Servo:
+    private double feederServoGain = 1;
+
 
     @Override
     public void init() {
@@ -99,5 +102,10 @@ public class CompetitionBotTeleOp extends OpMode {
         double launcherSpeed = gamepad2.left_stick_y * launcherMotorGain;
         DcMotorUtil.setMotorsPower(robot.launcherMotors, launcherSpeed);
         telemetry.addData("Launcher Motor Speed", launcherSpeed);
+
+        // Loader Control:
+        double feederSpeed = gamepad2.right_trigger * feederServoGain;
+        robot.feederServo.setPower(feederSpeed);
+        telemetry.addData("Feeder Servo Speed", feederSpeed);
     }
 }
