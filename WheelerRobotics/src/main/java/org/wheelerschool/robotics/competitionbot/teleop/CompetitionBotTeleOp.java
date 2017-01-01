@@ -78,9 +78,9 @@ public class CompetitionBotTeleOp extends OpMode {
         robot.pusherRight.servo.setPosition(gamepad1.right_trigger * beaconTriggerGain);
 
         // Drive Direction Set:
-        JoystickButtonUpdated.JoystickButtonData robotDirectionReveseButtonData =
+        JoystickButtonUpdated.JoystickButtonData robotDirectionReverseButtonData =
                 robotDirectionReveseButton.getValueIgnoreException();
-        if (robotDirectionReveseButtonData.isButtonStateNew && robotDirectionReveseButtonData.buttonState) {
+        if (robotDirectionReverseButtonData.isButtonStateNew && robotDirectionReverseButtonData.buttonState) {
             robotForward = !robotForward;
             robot.setRobotDirection(robotForward);
         }
