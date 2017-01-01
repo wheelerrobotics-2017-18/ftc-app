@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
  *
  * @author luciengaitskell
  * @since 161218
- * @version 1.0
+ * @version 1.1
  */
 
 public class JoystickButtonUpdated {
@@ -17,9 +17,18 @@ public class JoystickButtonUpdated {
     // The last button state that was read:
     private boolean lastButtonState;
 
+    // The value of the state flip each *new* button press:
+    private boolean lastFlipStateValue;
+
+
     public JoystickButtonUpdated(Callable<Boolean> getButton) {
+        this(getButton, false);
+    }
+
+    public JoystickButtonUpdated(Callable<Boolean> getButton, boolean defaultFlipStateValue) {
         // Set the get button state Callable:
         this.getButton = getButton;
+        this.lastFlipStateValue = defaultFlipStateValue;
     }
 
 
@@ -29,6 +38,7 @@ public class JoystickButtonUpdated {
          */
         public boolean buttonState;
         public boolean isButtonStateNew;
+        public boolean flipStateValue;
     }
 
     public JoystickButtonData getValue() throws Exception {
@@ -50,6 +60,14 @@ public class JoystickButtonUpdated {
 
         // Set last button state:
         lastButtonState = button;
+
+        // If the button has been newly pressed:
+        if (joystickButtonData.isButtonStateNew && joystickButtonData.buttonState) {
+            // Invert last flip state value:
+            this.lastFlipStateValue = !this.lastFlipStateValue;
+        }
+        // Set flip state value in the JoystickButtonData object
+        joystickButtonData.flipStateValue = this.lastFlipStateValue;
 
         // Return the JoystickButtonData object:
         return joystickButtonData;
