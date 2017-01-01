@@ -46,6 +46,8 @@ public class CompetitionBotConfig {
     public List<DcMotor> leftMotors = new ArrayList<>();
     public List<DcMotor> rightMotors = new ArrayList<>();
 
+    public List<DcMotor> launcherMotors = new ArrayList<>();
+
     public CompetitionBotConfig(HardwareMap hardwareMap) {
         this(hardwareMap, defaultRobotForwards);
     }
@@ -70,6 +72,11 @@ public class CompetitionBotConfig {
 
         DcMotorUtil.setMotorsRunMode(this.leftMotors, DcMotor.RunMode.RUN_USING_ENCODER);
         DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Launcher Motors:
+        launcherMotors.add(hardwareMap.dcMotor.get("launcherLeft"));
+        launcherMotors.add(hardwareMap.dcMotor.get("launcherRight"));
+        DcMotorUtil.setMotorsDirection(launcherMotors, DcMotorSimple.Direction.REVERSE);
     }
 
     public void setRobotDirection(boolean forwards) {
