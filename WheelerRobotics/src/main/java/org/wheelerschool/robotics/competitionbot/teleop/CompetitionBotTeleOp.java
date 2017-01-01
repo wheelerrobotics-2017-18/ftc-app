@@ -39,6 +39,9 @@ public class CompetitionBotTeleOp extends OpMode {
     // Drive Motors:
     private double driveMotorGain = -1;
 
+    // Launcher Motors:
+    private double launcherMotorGain = -0.8;
+
 
     @Override
     public void init() {
@@ -91,5 +94,10 @@ public class CompetitionBotTeleOp extends OpMode {
 
         telemetry.addData("Left Motors Encoder", DcMotorUtil.getMotorsPosition(robot.leftMotors));
         telemetry.addData("Right Motors Encoder", DcMotorUtil.getMotorsPosition(robot.rightMotors));
+
+        // Launcher Control:
+        double launcherSpeed = gamepad2.left_stick_y * launcherMotorGain;
+        DcMotorUtil.setMotorsPower(robot.launcherMotors, launcherSpeed);
+        telemetry.addData("Launcher Motor Speed", launcherSpeed);
     }
 }
