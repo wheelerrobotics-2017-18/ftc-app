@@ -40,7 +40,7 @@ public class CompetitionBotTeleOp extends OpMode {
     private double driveMotorGain = -0.7;
 
     // Launcher Motors:
-    private double launcherMotorGain = -0.8;
+    private JoystickButtonUpdated launcherActivateButton;
 
     // Feeder Servo:
     private double feederServoGain = 1;
@@ -55,6 +55,12 @@ public class CompetitionBotTeleOp extends OpMode {
                 return gamepad1.y;
             }
         });
+        launcherActivateButton = new JoystickButtonUpdated(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return gamepad2.x;
+            }
+        }, false);
 
         // Beacon Pushers:
 
@@ -99,9 +105,32 @@ public class CompetitionBotTeleOp extends OpMode {
         telemetry.addData("Right Motors Encoder", DcMotorUtil.getMotorsPosition(robot.rightMotors));
 
         // Launcher Control:
-        double launcherSpeed = gamepad2.left_stick_y * launcherMotorGain;
-        DcMotorUtil.setMotorsPower(robot.launcherMotors, launcherSpeed);
-        telemetry.addData("Launcher Motor Speed", launcherSpeed);
+        /**
+         * The "gamepad2.x" button is used to toggle the launcher on and off. After the launcher has
+         *  been activated and "gamepad2.a" is held, the power is set to launching speed. If the
+         *  button is let go of, it will return to idling power.
+         */
+        //  Get current button data:
+        JoystickButtonUpdated.JoystickButtonData launcherActivateButtonData =
+                launcherActivateButton.getValueIgnoreException();
+
+        double launcherPower;
+        // If the launcher is activated:
+        if (launcherActivateButtonData.flipStateValue) {
+            // If "gamepad2.a" is held down:
+            if (gamepad2.a) {
+                // Set the launcher to launch mode:
+                launcherPower = robot.setLauncherState(CompetitionBotConfig.LauncherMotorsState.LAUNCH);
+            } else {
+                // Set the launcher to idle mode:
+                launcherPower = robot.setLauncherState(CompetitionBotConfig.LauncherMotorsState.IDLE);
+            }
+        } else {
+            // Disable the launcher:
+            launcherPower = robot.setLauncherState(CompetitionBotConfig.LauncherMotorsState.DISABLE);
+        }
+
+        telemetry.addData("Launcher Motor Speed", launcherPower);
 
         // Loader Control:
         double feederSpeed = gamepad2.right_trigger * feederServoGain;
