@@ -40,7 +40,7 @@ public class CompetitionBotTeleOp extends OpMode {
     private double driveMotorGain = -0.7;
 
     // Launcher Motors:
-    private double launcherMotorGain = -0.8;
+    private double launcherMotorGain = -0.5;
 
     // Feeder Servo:
     private double feederServoGain = 1;
