@@ -48,6 +48,9 @@ public class CompetitionBotConfig {
     public List<DcMotor> rightMotors = new ArrayList<>();
 
     public List<DcMotor> launcherMotors = new ArrayList<>();
+    public enum LauncherMotorsState {
+        DISABLE, IDLE, LAUNCH
+    }
 
     public CRServo feederServo;
 
@@ -96,5 +99,25 @@ public class CompetitionBotConfig {
 
         DcMotorUtil.setMotorsDirection(this.leftMotors, DcMotorSimple.Direction.FORWARD);
         DcMotorUtil.setMotorsDirection(this.rightMotors, DcMotorSimple.Direction.REVERSE);
+    }
+
+    public double setLauncherState(LauncherMotorsState state) {
+        double launcherMotorIdlePower = 0.2;
+        double launcherMotorLaunchPower = 0.6;
+
+        // Default launcher speed:
+        double launcherPower = 0;
+        if (state == LauncherMotorsState.IDLE){
+            // Set the launcher power to idle mode:
+            launcherPower = launcherMotorIdlePower;
+        } else if (state == LauncherMotorsState.LAUNCH) {
+            // Set the launcher power to launch mode:
+            launcherPower = launcherMotorLaunchPower;
+        }
+
+        // Set the launcher Motors:
+        DcMotorUtil.setMotorsPower(this.launcherMotors, launcherPower);
+
+        return launcherPower;
     }
 }
