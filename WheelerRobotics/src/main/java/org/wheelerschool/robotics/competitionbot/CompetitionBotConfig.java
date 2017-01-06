@@ -103,7 +103,7 @@ public class CompetitionBotConfig {
 
     public double setLauncherState(LauncherMotorsState state) {
         double launcherMotorIdlePower = 0.2;
-        double launcherMotorLaunchPower = 0.6;
+        double launcherMotorLaunchPower = 0.35;
 
         // Default launcher speed:
         double launcherPower = 0;
