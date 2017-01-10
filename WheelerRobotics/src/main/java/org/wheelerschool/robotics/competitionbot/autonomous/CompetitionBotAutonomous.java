@@ -628,11 +628,11 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
             Log.i(AUTO_STATE_LOG_TAG, "Drive to second beacon push location");
             driveToPosition(SECOND_BEACON_PRESS_LOCATION, 1);
-            Log.i(LOG_TAG, "CLICK BEACON TWO HERE!");
+            Log.i(AUTO_STATE_LOG_TAG, "CLICK BEACON TWO HERE!");
 
             pushBeacon();
         } else {  // This means that the drive to position was interrupted:
-            Log.e(LOG_TAG, "Final Robot angle was 'null' (interrupted). ENDING!");
+            Log.e(AUTO_STATE_LOG_TAG, "Final Robot angle was 'null' (interrupted). ENDING!");
         }
     }
 }
