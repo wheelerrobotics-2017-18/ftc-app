@@ -87,6 +87,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
     // Config:
     public static String LOG_TAG = "Comp Bot Auto";
+    public static String AUTO_STATE_LOG_TAG = "Comp Bot Auto State";
     private static long MAX_TIME_TIMEOUT = 200; // MAX time until TIMEOUT when running OpMode (millis)
     private static double NO_BEACON_ROTATE_SPEED = 0.25;
     private static double MINIMUM_ROTATION_DIFF = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 5);
@@ -555,31 +556,37 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
         // Autonomous Sections:
         // Drive forward by encoder counts:
+        Log.i(AUTO_STATE_LOG_TAG, "Initial drive by encoder");
         driveForwardByEncoder(0.6, 1, 7000);
 
         // Rotate robot to angle towards beacon
+        Log.i(AUTO_STATE_LOG_TAG, "Rotate after initial drive");
         rotateRobotIMU(AFTER_ENCODER_ROTATE_ANGLE, 1);
 
         //      Drive to the wall:
+        Log.i(AUTO_STATE_LOG_TAG, "Drive to initial first beacon");
         Double robotRot = driveToPosition(FIRST_BEACON_LOCATION, 1.5);
         // Log final robot angle:
-        Log.d(LOG_TAG, "Robot Angle: " + robotRot);
+        Log.i(AUTO_STATE_LOG_TAG, "Robot Angle (after first beacon drive): " + robotRot);
 
         //      Rotate to wall (using Vuforia):
-        Log.d(LOG_TAG, "Rotate to: " + TOWARDS_BEACON_ANGLE);
+        Log.i(AUTO_STATE_LOG_TAG, "Towards First Beacon Angle: " + TOWARDS_BEACON_ANGLE);
+        Log.i(AUTO_STATE_LOG_TAG, "Turning...");
         robotRot = rotateRobotVision(TOWARDS_BEACON_ANGLE, ROBOT_ROTATION_GAIN);
-        Log.d(LOG_TAG, "SHOULD BE FACING BEACON");
+        Log.i(AUTO_STATE_LOG_TAG, "SHOULD BE FACING FIRST BEACON");
         // Log final robot angle:
-        Log.d(LOG_TAG, "Robot Angle: " + robotRot);
+        Log.i(AUTO_STATE_LOG_TAG, "Robot Angle (after first beacon alignment): " + robotRot);
 
         // Drive in to press beacon:
+        Log.i(AUTO_STATE_LOG_TAG, "Drive to first beacon press position");
         robotRot = driveToPosition(FIRST_BEACON_PRESS_LOCATION, 1.5);
 
         idleMotors();
-        Log.d(LOG_TAG, "CLICK BEACON ONE HERE!");
 
+        Log.i(AUTO_STATE_LOG_TAG, "CLICK BEACON ONE HERE!");
         pushBeacon();
 
+        Log.i(AUTO_STATE_LOG_TAG, "Reverse to first beacon initial location");
         robotRot = driveToPosition(FIRST_BEACON_LOCATION, 2);
 
         // Sleep to break between rotate towards wall and rotate away
@@ -587,32 +594,41 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
         //      Rotate to follow wall:
         // Log the needed angle:
-        Log.d(LOG_TAG, "Needed Angle: " + PRE_WALL_FOLLOW_ANGLE);
+        Log.i(AUTO_STATE_LOG_TAG, "Needed angle for wall follow: " + PRE_WALL_FOLLOW_ANGLE);
 
         // Only continue if wasn't interrupted:
         if (robotRot != null) {
             // Calculate needed relative rotation:
             double rotationAngle = TranslationMotorNavigation.angleDifference(PRE_WALL_FOLLOW_ANGLE, robotRot);
             // Log the relative rotation:
-            Log.d(LOG_TAG, "Rotation Angle: " + rotationAngle);
+            Log.i(AUTO_STATE_LOG_TAG, "Relative rotation for wall follow: " + rotationAngle);
             // Start IMU based robot rotation:
+            Log.i(AUTO_STATE_LOG_TAG, "Rotate to wall follow angle by IMU");
             rotateRobotIMU(rotationAngle, ROBOT_ROTATION_GAIN);
 
             // Follow the wall:
+            Log.i(AUTO_STATE_LOG_TAG, "Follow the wall!");
             followWall();
+            Log.i(AUTO_STATE_LOG_TAG, "DETECTED LINE (HOPEFULLY THE SECOND BEACON'S)!");
 
             Thread.sleep(100);
 
             // Rotate to second beacon:
+            Log.i(AUTO_STATE_LOG_TAG, "Relative rotation for second beacon alignment: " + POST_WALL_FOLLOW_ROTATE_ANGLE);
+            Log.i(AUTO_STATE_LOG_TAG, "(Mostly) Align with second beacon, by rotate with IMU");
             rotateRobotIMU(POST_WALL_FOLLOW_ROTATE_ANGLE, 1);
 
             // Drive to press beacon:
+            Log.i(AUTO_STATE_LOG_TAG, "Drive to second beacon initial location");
             driveToPosition(SECOND_BEACON_INITIAL_LOCATION, 2);
 
+            Log.i(AUTO_STATE_LOG_TAG, "Desired angle for beacon alignment: " + TOWARDS_BEACON_ANGLE);
+            Log.i(AUTO_STATE_LOG_TAG, "Rotate to align with beacon");
             rotateRobotVision(TOWARDS_BEACON_ANGLE, ROBOT_ROTATION_GAIN);
 
+            Log.i(AUTO_STATE_LOG_TAG, "Drive to second beacon push location");
             driveToPosition(SECOND_BEACON_PRESS_LOCATION, 1);
-            Log.d(LOG_TAG, "CLICK BEACON TWO HERE!");
+            Log.i(LOG_TAG, "CLICK BEACON TWO HERE!");
 
             pushBeacon();
         } else {  // This means that the drive to position was interrupted:
