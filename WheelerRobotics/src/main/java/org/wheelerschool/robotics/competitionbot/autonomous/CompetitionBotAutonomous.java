@@ -86,7 +86,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     private VuforiaLocation vuforia = new VuforiaLocation(phoneLocation);
 
     // Config:
-    public static String LOG_TAG = "Comp Bot Auto";
+    public static String AUTO_FULL_LOG_TAG = "Comp Bot Auto Full";
+    public static String AUTO_STATE_LOG_TAG = "Comp Bot Auto State";
     private static long MAX_TIME_TIMEOUT = 200; // MAX time until TIMEOUT when running OpMode (millis)
     private static double NO_BEACON_ROTATE_SPEED = 0.25;
     private static double MINIMUM_ROTATION_DIFF = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 5);
@@ -130,7 +131,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     private double __calculateEncoderDriveMotorGain(long encoderChange) {
         double motorGain = 1 * Math.signum(encoderChange);
         if (encoderChange < ENCODER_DRIVE_RAMP_DOWN_VALUE) {
-            Log.d(LOG_TAG, "Encoder Ramp Down!");
+            Log.d(AUTO_FULL_LOG_TAG, "Encoder Ramp Down!");
             motorGain = motorGain * Math.abs(encoderChange) / ENCODER_DRIVE_RAMP_DOWN_VALUE;
         }
 
@@ -147,9 +148,9 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         DcMotorUtil.setMotorsRunMode(robot.rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Log the info:
-        Log.i(LOG_TAG, "RESET LEFT/RIGHT MOTOR ENCODERS");
-        Log.i(LOG_TAG, "Left Encoders Average: " + DcMotorUtil.getMotorsPosition(robot.leftMotors));
-        Log.i(LOG_TAG, "Right Encoders Average: " + DcMotorUtil.getMotorsPosition(robot.rightMotors));
+        Log.i(AUTO_FULL_LOG_TAG, "RESET LEFT/RIGHT MOTOR ENCODERS");
+        Log.i(AUTO_FULL_LOG_TAG, "Left Encoders Average: " + DcMotorUtil.getMotorsPosition(robot.leftMotors));
+        Log.i(AUTO_FULL_LOG_TAG, "Right Encoders Average: " + DcMotorUtil.getMotorsPosition(robot.rightMotors));
 
         while (opModeIsActive()) {
             // Get encoder values:
@@ -159,22 +160,22 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             // Check if encoder value was returned:
             if (leftEncoder != null && rightEncoder != null) {
                 telemetry.addData("Left Encoders", leftEncoder);
-                Log.d(LOG_TAG, "Left Encoders Average: " + leftEncoder);
+                Log.d(AUTO_FULL_LOG_TAG, "Left Encoders Average: " + leftEncoder);
                 telemetry.addData("Right Encoders", rightEncoder);
-                Log.d(LOG_TAG, "Right Encoders Average: " + rightEncoder);
+                Log.d(AUTO_FULL_LOG_TAG, "Right Encoders Average: " + rightEncoder);
 
                 long leftChange = encoderVal - leftEncoder;
                 long rightChange = encoderVal - rightEncoder;
 
                 telemetry.addData("Left Encoders Change", leftChange);
-                Log.d(LOG_TAG, "Left Encoders Change: " + leftChange);
+                Log.d(AUTO_FULL_LOG_TAG, "Left Encoders Change: " + leftChange);
                 telemetry.addData("Right Encoders Change", rightChange);
-                Log.d(LOG_TAG, "Right Encoders Change: " + rightChange);
+                Log.d(AUTO_FULL_LOG_TAG, "Right Encoders Change: " + rightChange);
 
                 // Break if both sides at final position:
                 if (Math.abs(leftChange) < MINIMUM_ENCODER_DRIVE_VALUE
                         && Math.abs(rightChange) < MINIMUM_ENCODER_DRIVE_VALUE) {
-                    Log.d(LOG_TAG, "ENCODERS AT FINAL POSITION!");
+                    Log.d(AUTO_FULL_LOG_TAG, "ENCODERS AT FINAL POSITION!");
                     break;
                 }
 
@@ -185,7 +186,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
                 DcMotorUtil.setMotorsPower(robot.leftMotors, differentialGain * motorPower * leftMotorGain);
                 DcMotorUtil.setMotorsPower(robot.rightMotors, (1/differentialGain) * motorPower * rightMotorGain);
             } else {  // This means that there was no encoder data:
-                Log.w(LOG_TAG, "ENCODER DRIVE: NO ENCODER DATA!");
+                Log.w(AUTO_FULL_LOG_TAG, "ENCODER DRIVE: NO ENCODER DATA!");
                 break;
             }
 
@@ -225,7 +226,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
                 float robotRot = lastRotation.thirdAngle;
 
                 // Log data for debug:
-                Log.d(LOG_TAG, String.format("X: %.3f, Y: %.3f, Rot: " + lastRotation.toString(), x, y));
+                Log.d(AUTO_FULL_LOG_TAG, String.format("X: %.3f, Y: %.3f, Rot: " + lastRotation.toString(), x, y));
 
                 // Calculate translation required to get to target:
                 VectorF translation = targetLocation.subtracted(lastLocation);
@@ -295,10 +296,10 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         // Break if rotation angle is smaller than minimum rotation difference
         //  (on target rotation):
         if (Math.abs(rotationAngle) < MINIMUM_ROTATION_DIFF) {
-            Log.d(LOG_TAG, "Rotation Angle: " + rotationAngle + " < Minimum Rot: " + MINIMUM_ROTATION_DIFF);
+            Log.d(AUTO_FULL_LOG_TAG, "Rotation Angle: " + rotationAngle + " < Minimum Rot: " + MINIMUM_ROTATION_DIFF);
             return true;
         } else {
-            Log.d(LOG_TAG, "Rotation Angle: " + rotationAngle + " > Minimum Rot: " + MINIMUM_ROTATION_DIFF);
+            Log.d(AUTO_FULL_LOG_TAG, "Rotation Angle: " + rotationAngle + " > Minimum Rot: " + MINIMUM_ROTATION_DIFF);
         }
 
         // Calculate left motors power and set motors:
@@ -374,43 +375,43 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         double initialRotation = initialAngle.firstAngle;
         // Add rotation to initial angle and make sure that it is a -180 - 180 value:
         double targetAngle = TranslationMotorNavigation.angleDifference(angle + initialRotation, 0);
-        Log.d(LOG_TAG, "angle: " + angle);
-        Log.d(LOG_TAG, "targetAngle: " + targetAngle);
+        Log.d(AUTO_FULL_LOG_TAG, "angle: " + angle);
+        Log.d(AUTO_FULL_LOG_TAG, "targetAngle: " + targetAngle);
 
         // Loop while OpMode is active
         while (opModeIsActive()) {
             telemetry.addData("Phase", "Rotate to Angle");
             // Get current robot angle:
             double robotAngle = getIMUOrientation().firstAngle;
-            Log.d(LOG_TAG, "robotAngle: " + robotAngle);
+            Log.d(AUTO_FULL_LOG_TAG, "robotAngle: " + robotAngle);
 
             // Calculate the needed angle of rotation to get to target:
             double rotationAngle = TranslationMotorNavigation.angleDifference(robotAngle, targetAngle);
             telemetry.addData("rotationAmount", rotationAngle);
-            Log.d(LOG_TAG, "rotationAmount: " + rotationAngle);
+            Log.d(AUTO_FULL_LOG_TAG, "rotationAmount: " + rotationAngle);
             // Calculate rotation power to be applied to motors:
             double rotationPower = (rotationAngle / Math.PI);
             rotationPower = (rotationPower * rotationGain);
             telemetry.addData("rotationPower", rotationPower);
-            Log.d(LOG_TAG, "rotationPower: " + rotationPower);
+            Log.d(AUTO_FULL_LOG_TAG, "rotationPower: " + rotationPower);
 
             // Break if rotation angle is smaller than minimum rotation difference
             //  (on target rotation):
             if (Math.abs(rotationAngle) < MINIMUM_ROTATION_DIFF) {
-                Log.d(LOG_TAG, "Rotation Angle: " + rotationAngle + " < Minimum Rot: " + MINIMUM_ROTATION_DIFF);
+                Log.d(AUTO_FULL_LOG_TAG, "Rotation Angle: " + rotationAngle + " < Minimum Rot: " + MINIMUM_ROTATION_DIFF);
                 break;
             }
 
             // Calculate left motors power and set motors:
             double leftPower = Range.clip(rotationPower, -1, 1);
             telemetry.addData("Left Motor Power", leftPower);
-            Log.d(LOG_TAG, "Left Motor Power: " + leftPower);
+            Log.d(AUTO_FULL_LOG_TAG, "Left Motor Power: " + leftPower);
             DcMotorUtil.setMotorsPower(robot.leftMotors, leftPower);
 
             // Calculate right motors power and set motors:
             double rightPower = -Range.clip(rotationPower, -1, 1);
             telemetry.addData("Right Motor Power", rightPower);
-            Log.d(LOG_TAG, "Right Motor Power: " + rightPower);
+            Log.d(AUTO_FULL_LOG_TAG, "Right Motor Power: " + rightPower);
             DcMotorUtil.setMotorsPower(robot.rightMotors, rightPower);
 
             // Update telemetry:
@@ -452,7 +453,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             double groundReflect = this.groundReflectSensor.getLightDetected();
 
             if (groundReflect > this.MIN_LINE_REFLECT_AMT) {
-                Log.d(LOG_TAG, "Ground Reflect: " + groundReflect + " > " + this.MIN_LINE_REFLECT_AMT);
+                Log.d(AUTO_FULL_LOG_TAG, "Ground Reflect: " + groundReflect + " > " + this.MIN_LINE_REFLECT_AMT);
                 idleMotors();
                 break;
             }
@@ -460,7 +461,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     }
 
     private void __logColorSensorValue(String colorSensorName, String valueName, int value) {
-        Log.d(LOG_TAG, colorSensorName + " Color Sensor " + valueName + ": " + value);
+        Log.d(AUTO_FULL_LOG_TAG, colorSensorName + " Color Sensor " + valueName + ": " + value);
     }
     private int __calculateColorSensorDisparity(ColorSensor colorSensor, String colorSensorName) {
         int disparity = 0;
@@ -474,7 +475,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         __logColorSensorValue(colorSensorName, "blue", blue);
         disparity += Math.abs(this.DESIRED_BEACON_COLOR[2] - blue);
 
-        Log.d(LOG_TAG, colorSensorName + " Color Sensor Disparity: " + disparity);
+        Log.d(AUTO_FULL_LOG_TAG, colorSensorName + " Color Sensor Disparity: " + disparity);
         return disparity;
     }
 
@@ -492,15 +493,15 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         int disparityDisparity = __calculateColorSensorDisparity(colorSensorLeft, "Left")
                 - __calculateColorSensorDisparity(colorSensorRight, "Right");
 
-        Log.d(LOG_TAG, "Disparity Disparity: " + disparityDisparity);
+        Log.d(AUTO_FULL_LOG_TAG, "Disparity Disparity: " + disparityDisparity);
         if (Integer.signum(disparityDisparity) == -1) {
-            Log.d(LOG_TAG, "Desired Color on Left");
+            Log.d(AUTO_FULL_LOG_TAG, "Desired Color on Left");
             __pushBeaconAndWait(robot.pusherLeft);
         } else if (Integer.signum(disparityDisparity) == 1){
-            Log.d(LOG_TAG, "Desired Color on Right");
+            Log.d(AUTO_FULL_LOG_TAG, "Desired Color on Right");
             __pushBeaconAndWait(robot.pusherRight);
         } else {
-            Log.d(LOG_TAG, "Equal Desired Color -- Skipping!");
+            Log.d(AUTO_FULL_LOG_TAG, "Equal Desired Color -- Skipping!");
         }
     }
 
@@ -555,31 +556,37 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
         // Autonomous Sections:
         // Drive forward by encoder counts:
+        Log.i(AUTO_STATE_LOG_TAG, "Initial drive by encoder");
         driveForwardByEncoder(0.6, 1, 7000);
 
         // Rotate robot to angle towards beacon
+        Log.i(AUTO_STATE_LOG_TAG, "Rotate after initial drive");
         rotateRobotIMU(AFTER_ENCODER_ROTATE_ANGLE, 1);
 
         //      Drive to the wall:
+        Log.i(AUTO_STATE_LOG_TAG, "Drive to initial first beacon");
         Double robotRot = driveToPosition(FIRST_BEACON_LOCATION, 1.5);
         // Log final robot angle:
-        Log.d(LOG_TAG, "Robot Angle: " + robotRot);
+        Log.i(AUTO_STATE_LOG_TAG, "Robot Angle (after first beacon drive): " + robotRot);
 
         //      Rotate to wall (using Vuforia):
-        Log.d(LOG_TAG, "Rotate to: " + TOWARDS_BEACON_ANGLE);
+        Log.i(AUTO_STATE_LOG_TAG, "Towards First Beacon Angle: " + TOWARDS_BEACON_ANGLE);
+        Log.i(AUTO_STATE_LOG_TAG, "Turning...");
         robotRot = rotateRobotVision(TOWARDS_BEACON_ANGLE, ROBOT_ROTATION_GAIN);
-        Log.d(LOG_TAG, "SHOULD BE FACING BEACON");
+        Log.i(AUTO_STATE_LOG_TAG, "SHOULD BE FACING FIRST BEACON");
         // Log final robot angle:
-        Log.d(LOG_TAG, "Robot Angle: " + robotRot);
+        Log.i(AUTO_STATE_LOG_TAG, "Robot Angle (after first beacon alignment): " + robotRot);
 
         // Drive in to press beacon:
+        Log.i(AUTO_STATE_LOG_TAG, "Drive to first beacon press position");
         robotRot = driveToPosition(FIRST_BEACON_PRESS_LOCATION, 1.5);
 
         idleMotors();
-        Log.d(LOG_TAG, "CLICK BEACON ONE HERE!");
 
+        Log.i(AUTO_STATE_LOG_TAG, "CLICK BEACON ONE HERE!");
         pushBeacon();
 
+        Log.i(AUTO_STATE_LOG_TAG, "Reverse to first beacon initial location");
         robotRot = driveToPosition(FIRST_BEACON_LOCATION, 2);
 
         // Sleep to break between rotate towards wall and rotate away
@@ -587,36 +594,45 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
         //      Rotate to follow wall:
         // Log the needed angle:
-        Log.d(LOG_TAG, "Needed Angle: " + PRE_WALL_FOLLOW_ANGLE);
+        Log.i(AUTO_STATE_LOG_TAG, "Needed angle for wall follow: " + PRE_WALL_FOLLOW_ANGLE);
 
         // Only continue if wasn't interrupted:
         if (robotRot != null) {
             // Calculate needed relative rotation:
             double rotationAngle = TranslationMotorNavigation.angleDifference(PRE_WALL_FOLLOW_ANGLE, robotRot);
             // Log the relative rotation:
-            Log.d(LOG_TAG, "Rotation Angle: " + rotationAngle);
+            Log.i(AUTO_STATE_LOG_TAG, "Relative rotation for wall follow: " + rotationAngle);
             // Start IMU based robot rotation:
+            Log.i(AUTO_STATE_LOG_TAG, "Rotate to wall follow angle by IMU");
             rotateRobotIMU(rotationAngle, ROBOT_ROTATION_GAIN);
 
             // Follow the wall:
+            Log.i(AUTO_STATE_LOG_TAG, "Follow the wall!");
             followWall();
+            Log.i(AUTO_STATE_LOG_TAG, "DETECTED LINE (HOPEFULLY THE SECOND BEACON'S)!");
 
             Thread.sleep(100);
 
             // Rotate to second beacon:
+            Log.i(AUTO_STATE_LOG_TAG, "Relative rotation for second beacon alignment: " + POST_WALL_FOLLOW_ROTATE_ANGLE);
+            Log.i(AUTO_STATE_LOG_TAG, "(Mostly) Align with second beacon, by rotate with IMU");
             rotateRobotIMU(POST_WALL_FOLLOW_ROTATE_ANGLE, 1);
 
             // Drive to press beacon:
+            Log.i(AUTO_STATE_LOG_TAG, "Drive to second beacon initial location");
             driveToPosition(SECOND_BEACON_INITIAL_LOCATION, 2);
 
+            Log.i(AUTO_STATE_LOG_TAG, "Desired angle for beacon alignment: " + TOWARDS_BEACON_ANGLE);
+            Log.i(AUTO_STATE_LOG_TAG, "Rotate to align with beacon");
             rotateRobotVision(TOWARDS_BEACON_ANGLE, ROBOT_ROTATION_GAIN);
 
+            Log.i(AUTO_STATE_LOG_TAG, "Drive to second beacon push location");
             driveToPosition(SECOND_BEACON_PRESS_LOCATION, 1);
-            Log.d(LOG_TAG, "CLICK BEACON TWO HERE!");
+            Log.i(AUTO_STATE_LOG_TAG, "CLICK BEACON TWO HERE!");
 
             pushBeacon();
         } else {  // This means that the drive to position was interrupted:
-            Log.e(LOG_TAG, "Final Robot angle was 'null' (interrupted). ENDING!");
+            Log.e(AUTO_STATE_LOG_TAG, "Final Robot angle was 'null' (interrupted). ENDING!");
         }
     }
 }
