@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.wheelerschool.robotics.library.util.DcMotorUtil;
@@ -54,6 +55,8 @@ public class CompetitionBotConfig {
 
     public CRServo feederServo;
 
+    public OpticalDistanceSensor feedDetector;
+
     public CompetitionBotConfig(HardwareMap hardwareMap) {
         this(hardwareMap, defaultRobotForwards);
     }
@@ -86,6 +89,8 @@ public class CompetitionBotConfig {
 
         // Launcher Feed Servo:
         feederServo = hardwareMap.crservo.get("feeder");
+
+        feedDetector = hardwareMap.opticalDistanceSensor.get("feedDetector");
     }
 
     public void setRobotDirection(boolean forwards) {
