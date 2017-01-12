@@ -43,7 +43,12 @@ public class CompetitionBotTeleOp extends OpMode {
     private JoystickButtonUpdated launcherActivateButton;
 
     // Feeder Servo:
-    private double feederServoGain = 1;
+    private double feederServoFeedPower = 0.8;
+    private boolean feederNotDisabled = false;
+    private JoystickButtonUpdated feederServoActivateButton;
+
+    // Feed Detector:
+    private double feedDetectorBallValue = 0.01;
 
 
     @Override
@@ -61,6 +66,12 @@ public class CompetitionBotTeleOp extends OpMode {
                 return gamepad2.x;
             }
         }, false);
+        feederServoActivateButton = new JoystickButtonUpdated(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return gamepad2.b;
+            }
+        });
 
         // Beacon Pushers:
 
@@ -133,8 +144,35 @@ public class CompetitionBotTeleOp extends OpMode {
         telemetry.addData("Launcher Motor Speed", launcherPower);
 
         // Loader Control:
-        double feederSpeed = gamepad2.right_trigger * feederServoGain;
+        //  Get current button data:
+        JoystickButtonUpdated.JoystickButtonData joystickButtonData
+                = feederServoActivateButton.getValueIgnoreException();
+
+        //  Read the feed detector:
+        double feedDetectorValue = robot.feedDetector.getLightDetected();
+
+        //  If the button press is new, enable the feeder:
+        if (joystickButtonData.buttonState && joystickButtonData.isButtonStateNew) {
+            feederNotDisabled = true;
+        }
+        //  Disable the feeder, if the feed detector is above the desired value:
+        if (feedDetectorValue>feedDetectorBallValue) {
+            feederNotDisabled = false;
+        }
+
+        //  Default feeder speed:
+        double feederSpeed = 0;
+        //  Turn on the feeder if the button is being pushed, and the feeder is enabled:
+        if (joystickButtonData.buttonState && feederNotDisabled) {
+            feederSpeed = feederServoFeedPower;
+        }
+        //  Set the feeder speed:
         robot.feederServo.setPower(feederSpeed);
+
+        //  Add feeder speed to telemetry:
         telemetry.addData("Feeder Servo Speed", feederSpeed);
+
+        //  Add feeder detector value to log:
+        telemetry.addData("Feed Detector", feedDetectorValue);
     }
 }
