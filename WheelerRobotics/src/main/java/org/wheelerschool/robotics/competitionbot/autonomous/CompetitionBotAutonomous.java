@@ -426,6 +426,9 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         /*--------------------------------------FOLLOW THE WALL-----------------------------------*/
         ConstantDistanceMotorNavigation constantDistanceNavigation = new ConstantDistanceMotorNavigation(NOMINAL_DISTANCE, MAXIMUM_VALUE_DIFF);
 
+        long lineDetectWaitTime = 1000;
+        long startTime = System.currentTimeMillis();
+
         while (opModeIsActive()) {
             telemetry.addData("Phase", "Following Wall");
 
@@ -452,7 +455,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             // Check if on beacon line:
             double groundReflect = this.groundReflectSensor.getLightDetected();
 
-            if (groundReflect > this.MIN_LINE_REFLECT_AMT) {
+            if (groundReflect > this.MIN_LINE_REFLECT_AMT
+                    && (System.currentTimeMillis()-startTime) > lineDetectWaitTime) {
                 Log.d(AUTO_FULL_LOG_TAG, "Ground Reflect: " + groundReflect + " > " + this.MIN_LINE_REFLECT_AMT);
                 idleMotors();
                 break;
