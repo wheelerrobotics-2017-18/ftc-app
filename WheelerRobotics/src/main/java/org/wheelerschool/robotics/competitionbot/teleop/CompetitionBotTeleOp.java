@@ -34,6 +34,7 @@ public class CompetitionBotTeleOp extends OpMode {
 
     // Collector Motors:
     private double collectorMotorsSpeed = -1;
+    private double collectorMotorsReleaseSpeed = 1;
     private List<DcMotor> collectorMotors;
 
     // Drive Motors:
@@ -86,6 +87,8 @@ public class CompetitionBotTeleOp extends OpMode {
         // Collector Motors:
         if (gamepad1.right_bumper) {
             DcMotorUtil.setMotorsPower(collectorMotors, collectorMotorsSpeed);
+        } else if (gamepad1.left_bumper) {
+            DcMotorUtil.setMotorsPower(collectorMotors, collectorMotorsReleaseSpeed);
         } else {
             DcMotorUtil.setMotorsPower(collectorMotors, 0);
         }
