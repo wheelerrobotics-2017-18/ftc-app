@@ -33,7 +33,7 @@ public class CompetitionBotTeleOp extends OpMode {
     // Beacon Pushers:
 
     // Collector Motors:
-    private double collectorMotorsSpeed = -0.5;
+    private double collectorMotorsSpeed = -1;
     private List<DcMotor> collectorMotors;
 
     // Drive Motors:
