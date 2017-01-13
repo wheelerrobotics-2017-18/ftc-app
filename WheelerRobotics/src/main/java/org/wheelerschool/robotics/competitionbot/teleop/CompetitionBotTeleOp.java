@@ -3,7 +3,6 @@ package org.wheelerschool.robotics.competitionbot.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.wheelerschool.robotics.competitionbot.CompetitionBotConfig;
 import org.wheelerschool.robotics.library.util.DcMotorUtil;
