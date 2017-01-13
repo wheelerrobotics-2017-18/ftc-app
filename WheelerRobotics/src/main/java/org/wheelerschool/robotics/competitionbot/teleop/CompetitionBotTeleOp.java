@@ -49,7 +49,7 @@ public class CompetitionBotTeleOp extends OpMode {
     private JoystickButtonUpdated feederServoActivateButton;
 
     // Feed Detector:
-    private double feedDetectorBallValue = 0.01;
+    private double feedDetectorBallValue = 0.03;
 
 
     @Override
