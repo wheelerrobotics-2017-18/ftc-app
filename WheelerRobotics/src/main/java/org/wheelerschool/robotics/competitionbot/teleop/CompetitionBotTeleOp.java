@@ -43,6 +43,7 @@ public class CompetitionBotTeleOp extends OpMode {
     private JoystickButtonUpdated launcherActivateButton;
 
     // Feeder Servo:
+    private double feederServoManualGain = 1;
     private double feederServoFeedPower = 0.8;
     private boolean feederNotDisabled = false;
     private JoystickButtonUpdated feederServoActivateButton;
@@ -144,29 +145,32 @@ public class CompetitionBotTeleOp extends OpMode {
         telemetry.addData("Launcher Motor Speed", launcherPower);
 
         // Loader Control:
-        //  Get current button data:
-        JoystickButtonUpdated.JoystickButtonData joystickButtonData
-                = feederServoActivateButton.getValueIgnoreException();
+        double feederSpeed = gamepad2.right_trigger * feederServoManualGain;
 
         //  Read the feed detector:
         double feedDetectorValue = robot.feedDetector.getLightDetected();
+        if (feederSpeed == 0) {
+            //  Get current button data:
+            JoystickButtonUpdated.JoystickButtonData joystickButtonData
+                    = feederServoActivateButton.getValueIgnoreException();
 
-        //  If the button press is new, enable the feeder:
-        if (joystickButtonData.buttonState && joystickButtonData.isButtonStateNew) {
-            feederNotDisabled = true;
-        }
-        //  Disable the feeder, if the feed detector is above the desired value:
-        if (feedDetectorValue>feedDetectorBallValue) {
-            feederNotDisabled = false;
-        }
+            //  If the button press is new, enable the feeder:
+            if (joystickButtonData.buttonState && joystickButtonData.isButtonStateNew) {
+                feederNotDisabled = true;
+            }
+            //  Disable the feeder, if the feed detector is above the desired value:
+            if (feedDetectorValue > feedDetectorBallValue) {
+                feederNotDisabled = false;
+            }
 
-        //  Default feeder speed:
-        double feederSpeed = 0;
-        //  Turn on the feeder if the button is being pushed, and the feeder is enabled:
-        if (joystickButtonData.buttonState && feederNotDisabled) {
-            feederSpeed = feederServoFeedPower;
+            //  Default feeder speed:
+            feederSpeed = 0;
+            //  Turn on the feeder if the button is being pushed, and the feeder is enabled:
+            if (joystickButtonData.buttonState && feederNotDisabled) {
+                feederSpeed = feederServoFeedPower;
+            }
+            //  Set the feeder speed:
         }
-        //  Set the feeder speed:
         robot.feederServo.setPower(feederSpeed);
 
         //  Add feeder speed to telemetry:
