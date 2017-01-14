@@ -497,15 +497,15 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         int disparityDisparity = __calculateColorSensorDisparity(colorSensorLeft, "Left")
                 - __calculateColorSensorDisparity(colorSensorRight, "Right");
 
-        Log.d(AUTO_FULL_LOG_TAG, "Disparity Disparity: " + disparityDisparity);
+        Log.d(AUTO_STATE_LOG_TAG, "Disparity Disparity: " + disparityDisparity);
         if (Integer.signum(disparityDisparity) == -1) {
-            Log.d(AUTO_FULL_LOG_TAG, "Desired Color on Left");
+            Log.d(AUTO_STATE_LOG_TAG, "Desired Color on Left");
             __pushBeaconAndWait(robot.pusherLeft);
         } else if (Integer.signum(disparityDisparity) == 1){
-            Log.d(AUTO_FULL_LOG_TAG, "Desired Color on Right");
+            Log.d(AUTO_STATE_LOG_TAG, "Desired Color on Right");
             __pushBeaconAndWait(robot.pusherRight);
         } else {
-            Log.d(AUTO_FULL_LOG_TAG, "Equal Desired Color -- Skipping!");
+            Log.d(AUTO_STATE_LOG_TAG, "Equal Desired Color -- Skipping!");
         }
     }
 
