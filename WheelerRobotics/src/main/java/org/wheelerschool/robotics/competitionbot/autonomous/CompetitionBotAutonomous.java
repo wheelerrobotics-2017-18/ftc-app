@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Range;
 
@@ -65,7 +64,6 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     public List<DcMotor> leftMotors = new ArrayList<>();
     public List<DcMotor> rightMotors = new ArrayList<>();
     //      Sensors:
-    OpticalDistanceSensor groundReflectSensor;
     //          IMU:
     BNO055IMU imu;
 
@@ -449,7 +447,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
 
             // Check if on beacon line:
-            double groundReflect = this.groundReflectSensor.getLightDetected();
+            double groundReflect = this.robot.groundReflectSensor.getLightDetected();
 
             if (groundReflect > this.MIN_LINE_REFLECT_AMT
                     && (System.currentTimeMillis()-startTime) > lineDetectWaitTime) {
@@ -530,8 +528,6 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         //          Retrieve and initialize the IMU:
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
-        //          ODS:
-        this.groundReflectSensor = hardwareMap.opticalDistanceSensor.get("groundODS");
 
         // Wait for start button to be pushed:
         LinearOpModeUtil.runWhileWait(this, new Callable<Void>() {
