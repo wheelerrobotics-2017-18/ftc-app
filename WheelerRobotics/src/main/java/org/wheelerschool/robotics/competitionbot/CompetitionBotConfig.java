@@ -1,9 +1,11 @@
 package org.wheelerschool.robotics.competitionbot;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -57,6 +59,9 @@ public class CompetitionBotConfig {
 
     public OpticalDistanceSensor feedDetector;
 
+    public ColorSensor colorRight;
+    public ColorSensor colorLeft;
+
     public CompetitionBotConfig(HardwareMap hardwareMap) {
         this(hardwareMap, defaultRobotForwards);
     }
@@ -91,6 +96,16 @@ public class CompetitionBotConfig {
         feederServo = hardwareMap.crservo.get("feeder");
 
         feedDetector = hardwareMap.opticalDistanceSensor.get("feedDetector");
+
+        // Beacon Sensors:
+        /// NOTE: Color sensors are flipped, because they are on a side referenced to the front
+        ///     of the robot:
+        colorLeft = hardwareMap.colorSensor.get("colorLeft");
+        colorLeft.setI2cAddress(I2cAddr.create7bit(0x1e));
+        colorLeft.enableLed(false);
+        colorRight = hardwareMap.colorSensor.get("colorRight");
+        colorRight.setI2cAddress(I2cAddr.create7bit(0x1f));
+        colorRight.enableLed(false);
     }
 
     public void setRobotDirection(boolean forwards) {
