@@ -568,6 +568,10 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         Log.i(AUTO_STATE_LOG_TAG, "Drive to first beacon press position");
         robotRot = driveToPosition(FIRST_BEACON_PRESS_LOCATION, 1.5);
 
+        Log.i(AUTO_STATE_LOG_TAG, "Towards First Beacon Angle: " + TOWARDS_BEACON_ANGLE);
+        Log.i(AUTO_STATE_LOG_TAG, "Turning...");
+        robotRot = rotateRobotVision(TOWARDS_BEACON_ANGLE, ROBOT_ROTATION_GAIN);
+
         idleMotors();
 
         Log.i(AUTO_STATE_LOG_TAG, "CLICK BEACON ONE HERE!");
@@ -616,6 +620,10 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             Log.i(AUTO_STATE_LOG_TAG, "Drive to second beacon push location");
             driveToPosition(SECOND_BEACON_PRESS_LOCATION, 1);
             Log.i(AUTO_STATE_LOG_TAG, "CLICK BEACON TWO HERE!");
+
+            Log.i(AUTO_STATE_LOG_TAG, "Desired angle for beacon alignment: " + TOWARDS_BEACON_ANGLE);
+            Log.i(AUTO_STATE_LOG_TAG, "Rotate to align with beacon (second time)");
+            rotateRobotVision(TOWARDS_BEACON_ANGLE, ROBOT_ROTATION_GAIN);
 
             pushBeacon();
         } else {  // This means that the drive to position was interrupted:
