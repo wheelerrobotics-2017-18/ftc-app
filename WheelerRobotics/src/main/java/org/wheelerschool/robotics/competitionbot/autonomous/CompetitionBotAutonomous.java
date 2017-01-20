@@ -70,9 +70,9 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     // Setup:
     //      Phone Location
     private OpenGLMatrix phoneLocation = OpenGLMatrix
-            .translation(4.5f * VuforiaLocation.MM_PER_INCH,
+            .translation(3.5f * VuforiaLocation.MM_PER_INCH,
                     2.25f * VuforiaLocation.MM_PER_INCH,
-                    5.5f * VuforiaLocation.MM_PER_INCH)
+                    7f * VuforiaLocation.MM_PER_INCH)
             .multiplied(Orientation.getRotationMatrix(
                     AxesReference.INTRINSIC, AxesOrder.XYZ,
                     AngleUnit.DEGREES, 0, -90, 180));
