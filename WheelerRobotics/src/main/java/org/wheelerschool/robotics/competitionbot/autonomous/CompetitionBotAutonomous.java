@@ -577,7 +577,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         driveForwardByEncoder(0.4, 1, -1800);
 
         // Sleep to break between rotate towards wall and rotate away
-        Thread.sleep(1000);
+        Thread.sleep(500);
 
         //      Rotate to follow wall:
         // Log the needed angle:
