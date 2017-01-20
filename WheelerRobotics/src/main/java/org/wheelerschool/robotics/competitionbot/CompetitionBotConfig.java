@@ -62,6 +62,8 @@ public class CompetitionBotConfig {
     public ColorSensor colorRight;
     public ColorSensor colorLeft;
 
+    public OpticalDistanceSensor groundReflectSensor;
+
     public CompetitionBotConfig(HardwareMap hardwareMap) {
         this(hardwareMap, defaultRobotForwards);
     }
@@ -106,6 +108,9 @@ public class CompetitionBotConfig {
         colorRight = hardwareMap.colorSensor.get("colorRight");
         colorRight.setI2cAddress(I2cAddr.create7bit(0x1f));
         colorRight.enableLed(false);
+
+        // Line Detector:
+        groundReflectSensor = hardwareMap.opticalDistanceSensor.get("groundODS");
     }
 
     public void setRobotDirection(boolean forwards) {
