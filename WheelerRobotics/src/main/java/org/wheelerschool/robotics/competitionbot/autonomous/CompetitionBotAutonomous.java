@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Range;
@@ -69,9 +68,6 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     OpticalDistanceSensor groundReflectSensor;
     //          IMU:
     BNO055IMU imu;
-    //          Color Sensors:
-    ColorSensor colorSensorLeft;
-    ColorSensor colorSensorRight;
 
     // Setup:
     //      Phone Location
@@ -494,8 +490,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     private void pushBeacon() throws InterruptedException {
         // Calculate the disparity between the color sensor disparity:
         ///  NOTE: Negative means desired color is more likely on the left, positive is the opposite
-        int disparityDisparity = __calculateColorSensorDisparity(colorSensorLeft, "Left")
-                - __calculateColorSensorDisparity(colorSensorRight, "Right");
+        int disparityDisparity = __calculateColorSensorDisparity(robot.colorLeft, "Left")
+                - __calculateColorSensorDisparity(robot.colorRight, "Right");
 
         Log.d(AUTO_STATE_LOG_TAG, "Disparity Disparity: " + disparityDisparity);
         if (Integer.signum(disparityDisparity) == -1) {
@@ -536,15 +532,6 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         imu.initialize(parameters);
         //          ODS:
         this.groundReflectSensor = hardwareMap.opticalDistanceSensor.get("groundODS");
-        //          Color Sensor:
-        /// NOTE: Color sensors are flipped, because they are on a side referenced to the front
-        ///     of the robot:
-        colorSensorLeft = hardwareMap.colorSensor.get("colorRight");
-        colorSensorLeft.setI2cAddress(I2cAddr.create7bit(0x1e));
-        colorSensorLeft.enableLed(false);
-        colorSensorRight = hardwareMap.colorSensor.get("colorLeft");
-        colorSensorRight.setI2cAddress(I2cAddr.create7bit(0x1f));
-        colorSensorRight.enableLed(false);
 
         // Wait for start button to be pushed:
         LinearOpModeUtil.runWhileWait(this, new Callable<Void>() {
