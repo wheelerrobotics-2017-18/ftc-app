@@ -70,7 +70,7 @@ public class CompetitionBotTeleOp extends OpMode {
         feederServoActivateButton = new JoystickButtonUpdated(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return gamepad2.b;
+                return gamepad2.right_bumper;
             }
         });
 
