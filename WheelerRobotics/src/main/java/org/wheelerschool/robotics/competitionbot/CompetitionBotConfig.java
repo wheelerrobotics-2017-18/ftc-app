@@ -1,5 +1,7 @@
 package org.wheelerschool.robotics.competitionbot;
 
+import com.qualcomm.hardware.adafruit.BNO055IMU;
+import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -41,6 +43,10 @@ public class CompetitionBotConfig {
             }
         }
     }
+
+    // IMU:
+    public BNO055IMU imu;
+
     // Autonomous Left/Right:
     public AdvancedServo pusherLeft;
     public AdvancedServo pusherRight;
@@ -70,6 +76,20 @@ public class CompetitionBotConfig {
 
     public CompetitionBotConfig(HardwareMap hardwareMap, boolean robotForwards) {
         this.hardwareMap = hardwareMap;
+
+        //  Sensors:
+        //      IMU:
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        //          Retrieve and initialize the IMU:
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
 
         // Pusher Servos:
         this.pusherLeft = new AdvancedServo(hardwareMap.servo.get("pusherLeft"));
