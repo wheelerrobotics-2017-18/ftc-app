@@ -11,8 +11,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.wheelerschool.robotics.competitionbot.CompetitionBotConfig;
 
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.ZYX;
-
 /**
  * Created by luciengaitskell on 1/14/17.
  */
