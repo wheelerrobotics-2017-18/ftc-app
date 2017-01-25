@@ -62,9 +62,6 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     //      Motor:
     public List<DcMotor> leftMotors = new ArrayList<>();
     public List<DcMotor> rightMotors = new ArrayList<>();
-    //      Sensors:
-    //          IMU:
-    BNO055IMU imu;
 
     // Setup:
     //      Phone Location
@@ -354,7 +351,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         /**
          * Get the IMU orientation with the designated settings.
          */
-        return this.imu.getAngularOrientation().toAngleUnit(AngleUnit.RADIANS)
+        return robot.imu.getAngularOrientation().toAngleUnit(AngleUnit.RADIANS)
                 .toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
     }
 
@@ -515,18 +512,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         //      Motors (for reference in extending an class to set the closer and farther motors):
         this.leftMotors.addAll(robot.leftMotors);
         this.rightMotors.addAll(robot.rightMotors);
-        //      Sensors:
-        //          IMU:
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        //          Retrieve and initialize the IMU:
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+
 
         // Wait for start button to be pushed:
         LinearOpModeUtil.runWhileWait(this, new Callable<Void>() {
