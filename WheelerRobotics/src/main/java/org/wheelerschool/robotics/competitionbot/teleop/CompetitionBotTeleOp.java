@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.wheelerschool.robotics.competitionbot.CompetitionBotConfig;
 import org.wheelerschool.robotics.library.util.DcMotorUtil;
+import org.wheelerschool.robotics.library.util.LinearOpModeActiveCallable;
 import org.wheelerschool.robotics.library.util.joystick.JoystickButtonUpdated;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class CompetitionBotTeleOp extends OpMode {
 
     @Override
     public void init() {
-        robot = new CompetitionBotConfig(hardwareMap);
+        robot = new CompetitionBotConfig(hardwareMap, telemetry, null);
         robotDirectionReveseButton = new JoystickButtonUpdated(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {

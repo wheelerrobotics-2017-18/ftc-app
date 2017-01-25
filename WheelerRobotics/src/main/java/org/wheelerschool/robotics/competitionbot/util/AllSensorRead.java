@@ -24,7 +24,7 @@ public class AllSensorRead extends OpMode {
 
     @Override
     public void init() {
-        this.robot = new CompetitionBotConfig(hardwareMap);
+        this.robot = new CompetitionBotConfig(hardwareMap, telemetry, null);
         rightUltrasound = hardwareMap.ultrasonicSensor.get("rightUltrasound");
         leftUltrasound = hardwareMap.ultrasonicSensor.get("leftUltrasound");
 
