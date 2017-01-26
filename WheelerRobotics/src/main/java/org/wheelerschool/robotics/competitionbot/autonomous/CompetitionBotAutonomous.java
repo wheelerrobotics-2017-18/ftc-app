@@ -151,8 +151,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             robot.rotateRobotIMU(rotationAngle, ROBOT_ROTATION_GAIN);
 
             // Follow the wall:
-            Log.i(AUTO_STATE_LOG_TAG, "Follow the wall!");
-            robot.followWall(closeMotors, fartherMotors, sideUltrasonicSensor);
+            Log.i(AUTO_STATE_LOG_TAG, "\"Follow\" the wall! (use IMU to drive straight)");
+            robot.driveForwardByIMU(0, ROBOT_ROTATION_GAIN, 0.8);
             Log.i(AUTO_STATE_LOG_TAG, "DETECTED LINE (HOPEFULLY THE SECOND BEACON'S)!");
 
             Thread.sleep(100);
