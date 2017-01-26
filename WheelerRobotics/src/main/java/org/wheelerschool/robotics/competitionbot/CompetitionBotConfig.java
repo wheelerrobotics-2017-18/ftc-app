@@ -485,6 +485,68 @@ public class CompetitionBotConfig {
                 .toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
     }
 
+    public void driveForwardByIMU(double angle, double rotationGain, double forwardPower) {
+        /**
+         * Rotate the robot by a certain degree angle using the IMU.
+         */
+        long lineDetectWaitTime = 1000;
+        long startTime = System.currentTimeMillis();
+
+        // Record initial angle:
+        Orientation initialAngle = getIMUOrientation();
+        // Get robot heading:
+        double initialRotation = initialAngle.firstAngle;
+        // Add rotation to initial angle and make sure that it is a -180 - 180 value:
+        double targetAngle = TranslationMotorNavigation.angleDifference(angle + initialRotation, 0);
+        Log.d(AUTO_FULL_LOG_TAG, "angle: " + angle);
+        Log.d(AUTO_FULL_LOG_TAG, "targetAngle: " + targetAngle);
+
+        // Loop while OpMode is active
+        while (__runBooleanCallableIgnoreException(getIsRunning)) {
+            telemetry.addData("Phase", "Drive forward with angle correction");
+            // Get current robot angle:
+            double robotAngle = getIMUOrientation().firstAngle;
+            Log.d(AUTO_FULL_LOG_TAG, "robotAngle: " + robotAngle);
+
+            // Calculate the needed angle of rotation to get to target:
+            double rotationAngle = TranslationMotorNavigation.angleDifference(robotAngle, targetAngle);
+            telemetry.addData("rotationAmount", rotationAngle);
+            Log.d(AUTO_FULL_LOG_TAG, "rotationAmount: " + rotationAngle);
+            // Calculate rotation power to be applied to motors:
+            double rotationPower = (rotationAngle / Math.PI);
+            rotationPower = (rotationPower * rotationGain);
+            telemetry.addData("rotationPower", rotationPower);
+            Log.d(AUTO_FULL_LOG_TAG, "rotationPower: " + rotationPower);
+
+            // Calculate left motors power and set motors:
+            double leftPower = forwardPower + Range.clip(rotationPower, -1, 1);
+            telemetry.addData("Left Motor Power", leftPower);
+            Log.d(AUTO_FULL_LOG_TAG, "Left Motor Power: " + leftPower);
+            DcMotorUtil.setMotorsPower(this.leftMotors, leftPower);
+
+            // Calculate right motors power and set motors:
+            double rightPower = forwardPower - Range.clip(rotationPower, -1, 1);
+            telemetry.addData("Right Motor Power", rightPower);
+            Log.d(AUTO_FULL_LOG_TAG, "Right Motor Power: " + rightPower);
+            DcMotorUtil.setMotorsPower(this.rightMotors, rightPower);
+
+            // Update telemetry:
+            telemetry.update();
+
+            // Check if on beacon line:
+            double groundReflect = this.groundReflectSensor.getLightDetected();
+
+            if (groundReflect > this.MIN_LINE_REFLECT_AMT
+                    && (System.currentTimeMillis()-startTime) > lineDetectWaitTime) {
+                Log.d(AUTO_FULL_LOG_TAG, "Ground Reflect: " + groundReflect + " > " + this.MIN_LINE_REFLECT_AMT);
+                idleMotors();
+                break;
+            }
+        }
+
+        idleMotors();
+    }
+
     public void rotateRobotIMU(double angle, double rotationGain) {
         /**
          * Rotate the robot by a certain degree angle using the IMU.
