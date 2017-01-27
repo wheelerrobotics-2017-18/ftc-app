@@ -96,18 +96,9 @@ public class CompetitionBotConfig {
                     AxesReference.INTRINSIC, AxesOrder.XYZ,
                     AngleUnit.DEGREES, 0, -90, 180));
     //      Vuforia Target Setup:
-    public VuforiaLocation vuforia = new VuforiaLocation(phoneLocation);
+    public VuforiaLocation vuforia;
 
-
-    public CompetitionBotConfig(HardwareMap hardwareMap, Telemetry telemetry, Callable<Boolean> getIsRunning) {
-        this(hardwareMap, telemetry, defaultRobotForwards, getIsRunning);
-    }
-
-    public CompetitionBotConfig(HardwareMap hardwareMap, Telemetry telemetry, boolean robotForwards, Callable<Boolean> getIsRunning) {
-        this.getIsRunning = getIsRunning;
-        this.telemetry = telemetry;
-        this.hardwareMap = hardwareMap;
-
+    public void setUpIMU() {
         //  Sensors:
         //      IMU:
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -118,8 +109,20 @@ public class CompetitionBotConfig {
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         //          Retrieve and initialize the IMU:
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+        this.imu = hardwareMap.get(BNO055IMU.class, "imu");
+        this.imu.initialize(parameters);
+    }
+
+    public CompetitionBotConfig(HardwareMap hardwareMap, Telemetry telemetry, Callable<Boolean> getIsRunning) {
+        this(hardwareMap, telemetry, defaultRobotForwards, getIsRunning);
+    }
+
+    public CompetitionBotConfig(HardwareMap hardwareMap, Telemetry telemetry, boolean robotForwards, Callable<Boolean> getIsRunning) {
+        this.vuforia = new VuforiaLocation(phoneLocation);
+
+        this.getIsRunning = getIsRunning;
+        this.telemetry = telemetry;
+        this.hardwareMap = hardwareMap;
 
 
         // Pusher Servos:
