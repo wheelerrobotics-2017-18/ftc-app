@@ -24,6 +24,10 @@ import static org.wheelerschool.robotics.competitionbot.CompetitionBotConfig.def
 
 @TeleOp
 public class CompetitionBotTeleOp extends OpMode {
+    public CompetitionBotTeleOp() {
+        super();
+        this.msStuckDetectInit = 10000;
+    }
     private String LOG_TAG = "Comp Bot TeleOp";
 
     CompetitionBotConfig robot;
@@ -56,6 +60,8 @@ public class CompetitionBotTeleOp extends OpMode {
     @Override
     public void init() {
         robot = new CompetitionBotConfig(hardwareMap, telemetry, null);
+        robot.setUpIMU();
+
         robotDirectionReveseButton = new JoystickButtonUpdated(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
