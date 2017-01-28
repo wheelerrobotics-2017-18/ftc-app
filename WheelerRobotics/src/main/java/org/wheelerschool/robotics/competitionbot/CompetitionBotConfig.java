@@ -226,6 +226,9 @@ public class CompetitionBotConfig {
     private static double NOMINAL_DISTANCE = 19;
     private static double MAXIMUM_VALUE_DIFF = 50;
     private double MIN_LINE_REFLECT_AMT = 0.4; // TODO: UPDATE THIS VALUE
+    private double FEEDER_POWER = 0.8;
+    private long BALL_DISPENCE_DELAY = 3500;
+    private double FEED_DETECTOR_BALL_VALUE = 0.03;
 
 
     public void noTargetSearchRotate() throws InterruptedException {
@@ -691,6 +694,35 @@ public class CompetitionBotConfig {
             __pushBeaconAndWait(this.pusherRight);
         } else {
             Log.d(AUTO_STATE_LOG_TAG, "Equal Desired Color -- Skipping!");
+        }
+    }
+
+    public void dispenceBalls(int ballQuantity) {
+        boolean feederNotDisabled = true;
+        double feederSpeed;
+
+        long initialTime = System.currentTimeMillis();
+        while (__runBooleanCallableIgnoreException(getIsRunning) && ballQuantity > 0) {
+            if ((System.currentTimeMillis()-initialTime) > BALL_DISPENCE_DELAY && !feederNotDisabled) {
+                feederNotDisabled = true;
+            }
+
+            if (feederNotDisabled){
+                double feedDetectorValue = this.feedDetector.getLightDetected();
+
+                //  Default feeder speed:
+                feederSpeed = 0;
+                //  Disable the feeder, if the feed detector is above the desired value:
+                if (feedDetectorValue > FEED_DETECTOR_BALL_VALUE) {
+                    initialTime = System.currentTimeMillis();
+                    feederNotDisabled = false;
+                    ballQuantity--;
+                } else {
+                    feederSpeed = FEEDER_POWER;
+                }
+                //  Set the feeder speed:
+                this.feederServo.setPower(feederSpeed);
+            }
         }
     }
 }
