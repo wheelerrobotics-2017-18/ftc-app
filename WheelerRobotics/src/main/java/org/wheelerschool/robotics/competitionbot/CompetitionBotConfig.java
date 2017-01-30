@@ -536,11 +536,13 @@ public class CompetitionBotConfig {
             Log.d(AUTO_FULL_LOG_TAG, "Right Motor Power: " + rightPower);
             DcMotorUtil.setMotorsPower(this.rightMotors, rightPower);
 
-            // Update telemetry:
-            telemetry.update();
 
             // Check if on beacon line:
             double groundReflect = this.groundReflectSensor.getLightDetected();
+            telemetry.addData("Ground Reflect", groundReflect);
+
+            // Update telemetry:
+            telemetry.update();
 
             if (groundReflect > this.MIN_LINE_REFLECT_AMT
                     && (System.currentTimeMillis()-startTime) > lineDetectWaitTime) {
@@ -636,12 +638,12 @@ public class CompetitionBotConfig {
 
             telemetry.addData("Rotation Power", navigationData.rotationPower);
 
-            // Update telemetry:
-            telemetry.update();
-
-
             // Check if on beacon line:
             double groundReflect = this.groundReflectSensor.getLightDetected();
+            telemetry.addData("Ground Reflect", groundReflect);
+
+            // Update telemetry:
+            telemetry.update();
 
             if (groundReflect > this.MIN_LINE_REFLECT_AMT
                     && (System.currentTimeMillis()-startTime) > lineDetectWaitTime) {
