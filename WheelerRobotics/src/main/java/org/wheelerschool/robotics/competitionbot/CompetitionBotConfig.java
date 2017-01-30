@@ -225,7 +225,7 @@ public class CompetitionBotConfig {
     private static double WALL_FOLLOW_FRONT_SPEED = 0.4;
     private static double NOMINAL_DISTANCE = 19;
     private static double MAXIMUM_VALUE_DIFF = 50;
-    private double MIN_LINE_REFLECT_AMT = 0.4; // TODO: UPDATE THIS VALUE
+    private double MIN_LINE_REFLECT_AMT = 0.3; // TODO: UPDATE THIS VALUE
     private double FEEDER_POWER = 0.8;
     private long BALL_DISPENCE_DELAY = 3500;
     private double FEED_DETECTOR_BALL_VALUE = 0.03;
