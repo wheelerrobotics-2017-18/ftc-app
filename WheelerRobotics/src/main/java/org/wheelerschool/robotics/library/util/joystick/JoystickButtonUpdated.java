@@ -18,7 +18,7 @@ public class JoystickButtonUpdated {
     private boolean lastButtonState;
 
     // The value of the state flip each *new* button press:
-    private boolean lastFlipStateValue;
+    public boolean lastFlipStateValue;
 
 
     public JoystickButtonUpdated(Callable<Boolean> getButton) {
