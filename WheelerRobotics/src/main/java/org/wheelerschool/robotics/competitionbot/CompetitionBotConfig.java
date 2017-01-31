@@ -129,10 +129,12 @@ public class CompetitionBotConfig {
         this.pusherLeft = new AdvancedServo(hardwareMap.servo.get("pusherLeft"));
         this.pusherLeft.retractedPos = 0;
         this.pusherLeft.extendedPos = 1;
+        this.pusherLeft.activatePusher(false);
         this.pusherRight = new AdvancedServo(hardwareMap.servo.get("pusherRight"));
         this.pusherRight.servo.setDirection(Servo.Direction.REVERSE);
         this.pusherRight.retractedPos = 0;
         this.pusherRight.extendedPos = 1;
+        this.pusherRight.activatePusher(false);
 
         // Drive Motors:
         this.leftMotors.add(this.hardwareMap.dcMotor.get("backLeft"));
@@ -142,14 +144,17 @@ public class CompetitionBotConfig {
 
         DcMotorUtil.setMotorsRunMode(this.leftMotors, DcMotor.RunMode.RUN_USING_ENCODER);
         DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
+        this.idleMotors();
 
         // Launcher Motors:
         launcherMotors.add(hardwareMap.dcMotor.get("launcherLeft"));
         launcherMotors.add(hardwareMap.dcMotor.get("launcherRight"));
         DcMotorUtil.setMotorsDirection(launcherMotors, DcMotorSimple.Direction.REVERSE);
+        this.setLauncherState(LauncherMotorsState.DISABLE);
 
         // Launcher Feed Servo:
         feederServo = hardwareMap.crservo.get("feeder");
+        feederServo.setPower(0);
 
         feedDetector = hardwareMap.opticalDistanceSensor.get("feedDetector");
 
