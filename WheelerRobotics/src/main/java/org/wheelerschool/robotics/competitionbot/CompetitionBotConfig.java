@@ -129,10 +129,12 @@ public class CompetitionBotConfig {
         this.pusherLeft = new AdvancedServo(hardwareMap.servo.get("pusherLeft"));
         this.pusherLeft.retractedPos = 0;
         this.pusherLeft.extendedPos = 1;
+        this.pusherLeft.activatePusher(false);
         this.pusherRight = new AdvancedServo(hardwareMap.servo.get("pusherRight"));
         this.pusherRight.servo.setDirection(Servo.Direction.REVERSE);
         this.pusherRight.retractedPos = 0;
         this.pusherRight.extendedPos = 1;
+        this.pusherRight.activatePusher(false);
 
         // Drive Motors:
         this.leftMotors.add(this.hardwareMap.dcMotor.get("backLeft"));
@@ -142,14 +144,17 @@ public class CompetitionBotConfig {
 
         DcMotorUtil.setMotorsRunMode(this.leftMotors, DcMotor.RunMode.RUN_USING_ENCODER);
         DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
+        this.idleMotors();
 
         // Launcher Motors:
         launcherMotors.add(hardwareMap.dcMotor.get("launcherLeft"));
         launcherMotors.add(hardwareMap.dcMotor.get("launcherRight"));
         DcMotorUtil.setMotorsDirection(launcherMotors, DcMotorSimple.Direction.REVERSE);
+        this.setLauncherState(LauncherMotorsState.DISABLE);
 
         // Launcher Feed Servo:
         feederServo = hardwareMap.crservo.get("feeder");
+        feederServo.setPower(0);
 
         feedDetector = hardwareMap.opticalDistanceSensor.get("feedDetector");
 
@@ -221,7 +226,7 @@ public class CompetitionBotConfig {
     private static double NO_BEACON_ROTATE_SPEED = 0.25;
     private static double MINIMUM_ROTATION_DIFF = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 5);
     private static long MINIMUM_ENCODER_DRIVE_VALUE = 800;
-    private static long ENCODER_DRIVE_RAMP_DOWN_VALUE = 3000;
+    private static long ENCODER_DRIVE_RAMP_DOWN_VALUE = 5000;
     private static double WALL_FOLLOW_FRONT_SPEED = 0.4;
     private static double NOMINAL_DISTANCE = 19;
     private static double MAXIMUM_VALUE_DIFF = 50;

@@ -39,6 +39,7 @@ public class CompetitionBotTeleOp extends LinearOpMode {
     // Beacon Pushers:
 
     // Collector Motors:
+    private JoystickButtonUpdated collectorMotorsActivateButton;
     private double collectorMotorsSpeed = -1;
     private double collectorMotorsReleaseSpeed = 1;
     private List<DcMotor> collectorMotors;
@@ -64,6 +65,12 @@ public class CompetitionBotTeleOp extends LinearOpMode {
         robot = new CompetitionBotConfig(hardwareMap, telemetry, null);
         robot.setUpIMU();
 
+        collectorMotorsActivateButton = new JoystickButtonUpdated(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return gamepad1.right_bumper;
+            }
+        }, false);
         robotDirectionReveseButton = new JoystickButtonUpdated(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -100,11 +107,17 @@ public class CompetitionBotTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Collector Motors:
-            if (gamepad1.right_bumper) {
-                DcMotorUtil.setMotorsPower(collectorMotors, collectorMotorsSpeed);
-            } else if (gamepad1.left_bumper) {
+            //  Get button data:
+            JoystickButtonUpdated.JoystickButtonData collectorActivateData
+                    = collectorMotorsActivateButton.getValueIgnoreException();
+
+            //  If the gamepad1.left_bumper is held, reverse the collector and disable the intake:
+            if (gamepad1.left_bumper) {
+                collectorMotorsActivateButton.lastFlipStateValue = false;
                 DcMotorUtil.setMotorsPower(collectorMotors, collectorMotorsReleaseSpeed);
-            } else {
+            } else if (collectorActivateData.flipStateValue) {  // If the intake is enabled, set power:
+                DcMotorUtil.setMotorsPower(collectorMotors, collectorMotorsSpeed);
+            } else {  // Else, disable the collector:
                 DcMotorUtil.setMotorsPower(collectorMotors, 0);
             }
 
