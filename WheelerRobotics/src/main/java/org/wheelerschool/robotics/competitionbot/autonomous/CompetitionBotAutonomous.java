@@ -76,9 +76,6 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         robot = new CompetitionBotConfig(hardwareMap, telemetry, false, new LinearOpModeActiveCallable(this));
         robot.setUpIMU();
 
-        //      Reset Beacon Pushers:
-        robot.pusherLeft.activatePusher(false);
-        robot.pusherRight.activatePusher(false);
         //      Motors (for reference in extending an class to set the closer and farther motors):
         this.leftMotors.addAll(robot.leftMotors);
         this.rightMotors.addAll(robot.rightMotors);
