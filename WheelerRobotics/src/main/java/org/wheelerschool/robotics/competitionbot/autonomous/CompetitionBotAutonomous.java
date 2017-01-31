@@ -44,6 +44,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     public VectorF SECOND_BEACON_INITIAL_LOCATION;
     public VectorF SECOND_BEACON_PRESS_LOCATION;
     public int[] DESIRED_BEACON_COLOR;
+    public double BALL_LAUNCH_ANGLE;
 
 
     // Hardware Setup:
@@ -154,6 +155,9 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             Log.i(AUTO_STATE_LOG_TAG, "(Mostly) Align with second beacon, by rotate with IMU");
             robot.rotateRobotIMU(POST_WALL_FOLLOW_ROTATE_ANGLE, 1);
 
+            //  Spin up launcher for launch:
+            robot.setLauncherState(CompetitionBotConfig.LauncherMotorsState.LAUNCH);
+
             // Drive to press beacon:
             Log.i(AUTO_STATE_LOG_TAG, "Drive to second beacon initial location");
             robot.driveToPosition(SECOND_BEACON_INITIAL_LOCATION, 2);
@@ -167,6 +171,24 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             robot.rotateRobotVision(TOWARDS_BEACON_ANGLE, ROBOT_ROTATION_GAIN);
 
             robot.pushBeacon(DESIRED_BEACON_COLOR);
+
+            Log.i(AUTO_STATE_LOG_TAG, "Reverse from second beacon, to allow for rotation room");
+            robot.driveForwardByEncoder(0.8, 1, -1500);
+
+            Log.i(AUTO_STATE_LOG_TAG, "Rotate to launch angle");
+            robot.rotateRobotVision(BALL_LAUNCH_ANGLE, ROBOT_ROTATION_GAIN);
+            Log.i(AUTO_STATE_LOG_TAG, "IN LAUNCH ANGLE");
+
+            Log.i(AUTO_STATE_LOG_TAG, "Drive to ball launch position");
+            robot.driveForwardByEncoder(0.5, 1, -7000);
+            Log.i(AUTO_STATE_LOG_TAG, "IN LAUNCH POSITION");
+
+            robot.dispenceBalls(2);  // Dispense balls
+
+            Thread.sleep(2000);  // Wait to make sure all balls have been dispensed
+
+            // Shut down launcher:
+            robot.setLauncherState(CompetitionBotConfig.LauncherMotorsState.DISABLE);
         } else {  // This means that the drive to position was interrupted:
             Log.e(AUTO_STATE_LOG_TAG, "Final Robot angle was 'null' (interrupted). ENDING!");
         }
