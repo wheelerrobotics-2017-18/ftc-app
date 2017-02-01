@@ -181,7 +181,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             Log.i(AUTO_STATE_LOG_TAG, "IN LAUNCH ANGLE");
 
             Log.i(AUTO_STATE_LOG_TAG, "Drive to ball launch position");
-            robot.driveForwardByEncoder(0.5, 1, -7000);
+            robot.driveForwardByIMU(6500, false, 0, ROBOT_ROTATION_GAIN, -1, 5500, 0.4);
             Log.i(AUTO_STATE_LOG_TAG, "IN LAUNCH POSITION");
 
             robot.dispenceBalls(2);  // Dispense balls
