@@ -168,7 +168,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
             Log.i(AUTO_STATE_LOG_TAG, "Desired angle for beacon alignment: " + TOWARDS_BEACON_ANGLE);
             Log.i(AUTO_STATE_LOG_TAG, "Rotate to align with beacon (second time)");
-            robot.rotateRobotVision(TOWARDS_BEACON_ANGLE, ROBOT_ROTATION_GAIN);
+            robotRot = robot.rotateRobotVision(TOWARDS_BEACON_ANGLE, ROBOT_ROTATION_GAIN);
 
             robot.pushBeacon(DESIRED_BEACON_COLOR);
 
@@ -176,7 +176,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             robot.driveForwardByEncoder(0.8, 1, -1500);
 
             Log.i(AUTO_STATE_LOG_TAG, "Rotate to launch angle");
-            robot.rotateRobotVision(BALL_LAUNCH_ANGLE, ROBOT_ROTATION_GAIN);
+            double launchRotationAngle = TranslationMotorNavigation.angleDifference(BALL_LAUNCH_ANGLE, robotRot);
+            robot.rotateRobotIMU(launchRotationAngle, ROBOT_ROTATION_GAIN);
             Log.i(AUTO_STATE_LOG_TAG, "IN LAUNCH ANGLE");
 
             Log.i(AUTO_STATE_LOG_TAG, "Drive to ball launch position");
