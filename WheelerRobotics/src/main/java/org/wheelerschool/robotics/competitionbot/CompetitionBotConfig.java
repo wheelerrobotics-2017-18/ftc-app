@@ -497,15 +497,17 @@ public class CompetitionBotConfig {
                 .toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
     }
 
-    public void driveForwardByIMU(double angle, double rotationGain, double forwardPower) throws InterruptedException {
-        driveForwardByIMU(angle, rotationGain, forwardPower, 0, 0);
+    public void driveForwardByIMU(long encoderLimit, boolean lineDetect, double angle, double rotationGain, double forwardPower) throws InterruptedException {
+        driveForwardByIMU(encoderLimit, lineDetect, angle, rotationGain, forwardPower, 0, 0);
     }
 
-    public void driveForwardByIMU(double angle, double rotationGain, double forwardPower,
+    public void driveForwardByIMU(long encoderLimit, boolean lineDetect, double angle, double rotationGain, double forwardPower,
                                   long encoderRampDistance, double rampPower) throws InterruptedException {
         /**
          * Rotate the robot by a certain degree angle using the IMU.
          */
+
+        resetEncoders();
 
         if (encoderRampDistance != 0) {
             resetEncoders();
@@ -528,6 +530,12 @@ public class CompetitionBotConfig {
         while (__runBooleanCallableIgnoreException(getIsRunning)) {
             Long encoderAverage = (DcMotorUtil.getMotorsPosition(this.leftMotors) +
                     DcMotorUtil.getMotorsPosition(this.rightMotors))/2;
+
+            if (encoderAverage != 0) {
+                if (Math.abs(encoderAverage) > Math.abs(encoderLimit)) {
+                    break;
+                }
+            }
 
             if (encoderRampDistance != 0) {
                 if (Math.abs(encoderAverage) > encoderRampDistance) {
@@ -567,14 +575,16 @@ public class CompetitionBotConfig {
             // Update telemetry:
             telemetry.update();
 
-            // Check if on beacon line:
-            double groundReflect = this.groundReflectSensor.getLightDetected();
+            if (lineDetect) {
+                // Check if on beacon line:
+                double groundReflect = this.groundReflectSensor.getLightDetected();
 
-            if (groundReflect > this.MIN_LINE_REFLECT_AMT
-                    && (System.currentTimeMillis()-startTime) > lineDetectWaitTime) {
-                Log.d(AUTO_FULL_LOG_TAG, "Ground Reflect: " + groundReflect + " > " + this.MIN_LINE_REFLECT_AMT);
-                idleMotors();
-                break;
+                if (groundReflect > this.MIN_LINE_REFLECT_AMT
+                        && (System.currentTimeMillis() - startTime) > lineDetectWaitTime) {
+                    Log.d(AUTO_FULL_LOG_TAG, "Ground Reflect: " + groundReflect + " > " + this.MIN_LINE_REFLECT_AMT);
+                    idleMotors();
+                    break;
+                }
             }
         }
 

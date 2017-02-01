@@ -150,7 +150,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
             // Follow the wall:
             Log.i(AUTO_STATE_LOG_TAG, "\"Follow\" the wall! (use IMU to drive straight)");
-            robot.driveForwardByIMU(0, ROBOT_ROTATION_GAIN, 0.8, 5000, 0.4);
+            robot.driveForwardByIMU(6500, true, 0, ROBOT_ROTATION_GAIN, 0.8, 5000, 0.4);
             Log.i(AUTO_STATE_LOG_TAG, "DETECTED LINE (HOPEFULLY THE SECOND BEACON'S)!");
 
             Thread.sleep(100);
