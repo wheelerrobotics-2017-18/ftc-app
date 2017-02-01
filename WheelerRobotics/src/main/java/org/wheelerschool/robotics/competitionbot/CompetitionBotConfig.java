@@ -211,6 +211,16 @@ public class CompetitionBotConfig {
         DcMotorUtil.setMotorsPower(this.rightMotors, 0);
     }
 
+    public void resetEncoders() throws InterruptedException {
+        // Reset Encoders:
+        DcMotorUtil.setMotorsRunMode(this.leftMotors, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Thread.sleep(50);  // Wait for reset to occur...
+        // Change mode to run using the encoders:
+        DcMotorUtil.setMotorsRunMode(this.leftMotors, DcMotor.RunMode.RUN_USING_ENCODER);
+        DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
     private Boolean __runBooleanCallableIgnoreException(Callable<Boolean> func) {
         try {
             return func.call();
@@ -270,13 +280,7 @@ public class CompetitionBotConfig {
     }
 
     public void driveForwardByEncoder(double motorPower, double differentialGain, long encoderVal) throws InterruptedException {
-        // Reset Encoders:
-        DcMotorUtil.setMotorsRunMode(this.leftMotors, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Thread.sleep(50);  // Wait for reset to occur...
-        // Change mode to run using the encoders:
-        DcMotorUtil.setMotorsRunMode(this.leftMotors, DcMotor.RunMode.RUN_USING_ENCODER);
-        DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
+        resetEncoders();
 
         // Log the info:
         Log.i(AUTO_FULL_LOG_TAG, "RESET LEFT/RIGHT MOTOR ENCODERS");
@@ -496,12 +500,23 @@ public class CompetitionBotConfig {
                 .toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
     }
 
-    public void driveForwardByIMU(double angle, double rotationGain, double forwardPower) {
+    public void driveForwardByIMU(double angle, double rotationGain, double forwardPower) throws InterruptedException {
+        driveForwardByIMU(angle, rotationGain, forwardPower, 0, 0);
+    }
+
+    public void driveForwardByIMU(double angle, double rotationGain, double forwardPower,
+                                  long encoderRampDistance, double rampPower) throws InterruptedException {
         /**
          * Rotate the robot by a certain degree angle using the IMU.
          */
+
+        if (encoderRampDistance != 0) {
+            resetEncoders();
+        }
+
         long lineDetectWaitTime = 1000;
         long startTime = System.currentTimeMillis();
+        double _forwardPower = forwardPower;
 
         // Record initial angle:
         Orientation initialAngle = getIMUOrientation();
@@ -514,6 +529,17 @@ public class CompetitionBotConfig {
 
         // Loop while OpMode is active
         while (__runBooleanCallableIgnoreException(getIsRunning)) {
+            Long encoderAverage = (DcMotorUtil.getMotorsPosition(this.leftMotors) +
+                    DcMotorUtil.getMotorsPosition(this.rightMotors))/2;
+
+            if (encoderRampDistance != 0) {
+                if (Math.abs(encoderAverage) > encoderRampDistance) {
+                    _forwardPower = rampPower;
+                } else {
+                    _forwardPower = forwardPower;
+                }
+            }
+
             telemetry.addData("Phase", "Drive forward with angle correction");
             // Get current robot angle:
             double robotAngle = getIMUOrientation().firstAngle;
@@ -530,13 +556,13 @@ public class CompetitionBotConfig {
             Log.d(AUTO_FULL_LOG_TAG, "rotationPower: " + rotationPower);
 
             // Calculate left motors power and set motors:
-            double leftPower = forwardPower + Range.clip(rotationPower, -1, 1);
+            double leftPower = _forwardPower + Range.clip(rotationPower, -1, 1);
             telemetry.addData("Left Motor Power", leftPower);
             Log.d(AUTO_FULL_LOG_TAG, "Left Motor Power: " + leftPower);
             DcMotorUtil.setMotorsPower(this.leftMotors, leftPower);
 
             // Calculate right motors power and set motors:
-            double rightPower = forwardPower - Range.clip(rotationPower, -1, 1);
+            double rightPower = _forwardPower - Range.clip(rotationPower, -1, 1);
             telemetry.addData("Right Motor Power", rightPower);
             Log.d(AUTO_FULL_LOG_TAG, "Right Motor Power: " + rightPower);
             DcMotorUtil.setMotorsPower(this.rightMotors, rightPower);
