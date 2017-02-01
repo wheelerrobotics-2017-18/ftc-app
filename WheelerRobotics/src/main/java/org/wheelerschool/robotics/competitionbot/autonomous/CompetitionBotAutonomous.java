@@ -107,21 +107,15 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         // Log final robot angle:
         Log.i(AUTO_STATE_LOG_TAG, "Robot Angle (after first beacon drive): " + robotRot);
 
-        //      Rotate to wall (using Vuforia):
-        Log.i(AUTO_STATE_LOG_TAG, "Towards First Beacon Angle: " + TOWARDS_BEACON_ANGLE);
-        Log.i(AUTO_STATE_LOG_TAG, "Turning...");
-        robotRot = robot.rotateRobotVision(TOWARDS_BEACON_ANGLE, ROBOT_ROTATION_GAIN);
-        Log.i(AUTO_STATE_LOG_TAG, "SHOULD BE FACING FIRST BEACON");
-        // Log final robot angle:
-        Log.i(AUTO_STATE_LOG_TAG, "Robot Angle (after first beacon alignment): " + robotRot);
-
         // Drive in to press beacon:
         Log.i(AUTO_STATE_LOG_TAG, "Drive to first beacon press position");
         robotRot = robot.driveToPosition(FIRST_BEACON_PRESS_LOCATION, 1.5);
 
+        //      Rotate to beacon (using Vuforia):
         Log.i(AUTO_STATE_LOG_TAG, "Towards First Beacon Angle: " + TOWARDS_BEACON_ANGLE);
         Log.i(AUTO_STATE_LOG_TAG, "Turning...");
         robotRot = robot.rotateRobotVision(TOWARDS_BEACON_ANGLE, ROBOT_ROTATION_GAIN);
+        Log.i(AUTO_STATE_LOG_TAG, "SHOULD BE FACING FIRST BEACON");
 
         robot.idleMotors();
 
@@ -163,10 +157,6 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             // Drive to press beacon:
             Log.i(AUTO_STATE_LOG_TAG, "Drive to second beacon initial location");
             robot.driveToPosition(SECOND_BEACON_INITIAL_LOCATION, 2);
-
-            Log.i(AUTO_STATE_LOG_TAG, "Desired angle for beacon alignment: " + TOWARDS_BEACON_ANGLE);
-            Log.i(AUTO_STATE_LOG_TAG, "Rotate to align with beacon");
-            robot.rotateRobotVision(TOWARDS_BEACON_ANGLE, ROBOT_ROTATION_GAIN);
 
             Log.i(AUTO_STATE_LOG_TAG, "Drive to second beacon push location");
             robot.driveToPosition(SECOND_BEACON_PRESS_LOCATION, 1);
