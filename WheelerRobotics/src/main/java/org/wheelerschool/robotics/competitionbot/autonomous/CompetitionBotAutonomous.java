@@ -124,7 +124,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         robot.pushBeacon(DESIRED_BEACON_COLOR);
 
         Log.i(AUTO_STATE_LOG_TAG, "Reverse from first beacon, to allow for rotation room");
-        robot.driveForwardByEncoder(0.8, 1, -2000);
+        robot.driveForwardByEncoder(1, 1, -1800);
 
         // Sleep to break between rotate towards wall and rotate away
         Thread.sleep(500);
