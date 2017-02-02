@@ -104,7 +104,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
         //      Drive to the wall:
         Log.i(AUTO_STATE_LOG_TAG, "Drive to initial first beacon");
-        Double robotRot = robot.driveToPosition(FIRST_BEACON_LOCATION, 1.5);
+        Double robotRot = robot.driveToPosition(FIRST_BEACON_LOCATION, 2.5);
         // Log final robot angle:
         Log.i(AUTO_STATE_LOG_TAG, "Robot Angle (after first beacon drive): " + robotRot);
 
@@ -148,17 +148,17 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             // Rotate to second beacon:
             Log.i(AUTO_STATE_LOG_TAG, "Relative rotation for second beacon alignment: " + POST_WALL_FOLLOW_ROTATE_ANGLE);
             Log.i(AUTO_STATE_LOG_TAG, "(Mostly) Align with second beacon, by rotate with IMU");
-            robot.rotateRobotIMU(POST_WALL_FOLLOW_ROTATE_ANGLE, 1);
+            robot.rotateRobotIMU(POST_WALL_FOLLOW_ROTATE_ANGLE, 1.5);
 
             //  Spin up launcher for launch:
             robot.setLauncherState(CompetitionBotConfig.LauncherMotorsState.LAUNCH);
 
             // Drive to press beacon:
             Log.i(AUTO_STATE_LOG_TAG, "Drive to second beacon initial location");
-            robot.driveToPosition(SECOND_BEACON_INITIAL_LOCATION, 2);
+            robot.driveToPosition(SECOND_BEACON_INITIAL_LOCATION, 1.5);
 
             Log.i(AUTO_STATE_LOG_TAG, "Drive to second beacon push location");
-            robot.driveToPosition(SECOND_BEACON_PRESS_LOCATION, 1);
+            robot.driveToPosition(SECOND_BEACON_PRESS_LOCATION, 2);
             Log.i(AUTO_STATE_LOG_TAG, "CLICK BEACON TWO HERE!");
 
             Log.i(AUTO_STATE_LOG_TAG, "Desired angle for beacon alignment: " + TOWARDS_BEACON_ANGLE);
@@ -172,7 +172,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
             Log.i(AUTO_STATE_LOG_TAG, "Rotate to launch angle");
             double launchRotationAngle = TranslationMotorNavigation.angleDifference(BALL_LAUNCH_ANGLE, robotRot);
-            robot.rotateRobotIMU(launchRotationAngle, ROBOT_ROTATION_GAIN);
+            robot.rotateRobotIMU(launchRotationAngle, 2);
             Log.i(AUTO_STATE_LOG_TAG, "IN LAUNCH ANGLE");
 
             Log.i(AUTO_STATE_LOG_TAG, "Drive to ball launch position");
