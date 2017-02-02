@@ -339,7 +339,7 @@ public class CompetitionBotConfig {
         TranslationMotorNavigation translationNavigation = new TranslationMotorNavigation();
         translationNavigation.ROTATION_IGNORE_DISTANCE = 60;
         translationNavigation.MIN_DRIVE_DISTANCE = 40;
-        translationNavigation.DEFAULT_ROTATION_GAIN = 1;
+        translationNavigation.DEFAULT_ROTATION_GAIN = 0.8;
 
         long time = System.currentTimeMillis();
         while (__runBooleanCallableIgnoreException(getIsRunning)) {
