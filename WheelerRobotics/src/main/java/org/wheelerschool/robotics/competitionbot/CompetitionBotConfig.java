@@ -588,6 +588,8 @@ public class CompetitionBotConfig {
                     break;
                 }
             }
+
+            telemetry.update();
         }
 
         idleMotors();
