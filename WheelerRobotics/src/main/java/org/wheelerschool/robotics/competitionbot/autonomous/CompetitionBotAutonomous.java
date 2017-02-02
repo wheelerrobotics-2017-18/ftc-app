@@ -168,7 +168,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             robot.pushBeacon(DESIRED_BEACON_COLOR);
 
             Log.i(AUTO_STATE_LOG_TAG, "Reverse from second beacon, to allow for rotation room");
-            robot.driveForwardByEncoder(0.8, 1, -1500);
+            robot.driveForwardByEncoder(1, 1, -1500);
 
             Log.i(AUTO_STATE_LOG_TAG, "Rotate to launch angle");
             double launchRotationAngle = TranslationMotorNavigation.angleDifference(BALL_LAUNCH_ANGLE, robotRot);
