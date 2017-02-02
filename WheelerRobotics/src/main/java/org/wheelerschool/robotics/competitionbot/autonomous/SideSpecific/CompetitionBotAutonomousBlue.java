@@ -31,7 +31,7 @@ public class CompetitionBotAutonomousBlue extends CompetitionBotAutonomous {
         this.closeMotors = this.rightMotors;
         this.fartherMotors = this.leftMotors;
         this.DESIRED_BEACON_COLOR = new int[] {0, 0, 4};
-        this.BALL_LAUNCH_ANGLE = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 130);
+        this.BALL_LAUNCH_ANGLE = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 122);
 
         super.runOpMode();
     }
