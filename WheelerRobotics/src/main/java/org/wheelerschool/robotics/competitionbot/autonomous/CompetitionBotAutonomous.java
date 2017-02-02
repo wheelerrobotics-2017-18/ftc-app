@@ -126,9 +126,6 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         Log.i(AUTO_STATE_LOG_TAG, "Reverse from first beacon, to allow for rotation room");
         robot.driveForwardByEncoder(1, 1, -1800);
 
-        // Sleep to break between rotate towards wall and rotate away
-        Thread.sleep(500);
-
         //      Rotate to follow wall:
         // Log the needed angle:
         Log.i(AUTO_STATE_LOG_TAG, "Needed angle for wall follow: " + PRE_WALL_FOLLOW_ANGLE);
@@ -147,8 +144,6 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             Log.i(AUTO_STATE_LOG_TAG, "\"Follow\" the wall! (use IMU to drive straight)");
             robot.driveForwardByIMU(6200, true, 0, ROBOT_ROTATION_GAIN, 0.8, 5000, 0.4);
             Log.i(AUTO_STATE_LOG_TAG, "DETECTED LINE (HOPEFULLY THE SECOND BEACON'S)!");
-
-            Thread.sleep(100);
 
             // Rotate to second beacon:
             Log.i(AUTO_STATE_LOG_TAG, "Relative rotation for second beacon alignment: " + POST_WALL_FOLLOW_ROTATE_ANGLE);
