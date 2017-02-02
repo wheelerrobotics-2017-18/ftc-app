@@ -20,7 +20,7 @@ public class CompetitionBotAutonomousBlue extends CompetitionBotAutonomous {
         // Sensor Setup:
         this.AFTER_ENCODER_ROTATE_ANGLE = AngleUnit.RADIANS.fromDegrees(-80);
         this.FIRST_BEACON_LOCATION = new VectorF(11.5f * VuforiaLocation.MM_PER_INCH, 57 * VuforiaLocation.MM_PER_INCH, 0);
-        this.FIRST_BEACON_PRESS_LOCATION = this.FIRST_BEACON_LOCATION.added(new VectorF(0, 5.5f * VuforiaLocation.MM_PER_INCH, 0));
+        this.FIRST_BEACON_PRESS_LOCATION = this.FIRST_BEACON_LOCATION.added(new VectorF(0, 5.75f * VuforiaLocation.MM_PER_INCH, 0));
         Log.d("CompBotAutoBlue", this.FIRST_BEACON_LOCATION.toString());
         this.PRE_WALL_FOLLOW_ANGLE = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 180);
         this.TOWARDS_BEACON_ANGLE = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 90);
