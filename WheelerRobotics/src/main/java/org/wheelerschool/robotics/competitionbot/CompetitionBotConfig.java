@@ -242,7 +242,7 @@ public class CompetitionBotConfig {
     private static double MAXIMUM_VALUE_DIFF = 50;
     private double MIN_LINE_REFLECT_AMT = 0.3; // TODO: UPDATE THIS VALUE
     private double FEEDER_POWER = 0.8;
-    private long BALL_DISPENCE_DELAY = 3500;
+    private long BALL_DISPENCE_DELAY = 2500;
     private double FEED_DETECTOR_BALL_VALUE = 0.03;
 
 
