@@ -26,7 +26,7 @@ public class CompetitionBotAutonomousBlue extends CompetitionBotAutonomous {
         this.TOWARDS_BEACON_ANGLE = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 90);
         this.SECOND_BEACON_INITIAL_LOCATION = new VectorF(-35f * VuforiaLocation.MM_PER_INCH, 61 * VuforiaLocation.MM_PER_INCH, 0);
         this.POST_WALL_FOLLOW_ROTATE_ANGLE = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, -90);
-        this.SECOND_BEACON_PRESS_LOCATION = this.SECOND_BEACON_INITIAL_LOCATION.added(new VectorF(0, 1.75f * VuforiaLocation.MM_PER_INCH, 0));
+        this.SECOND_BEACON_PRESS_LOCATION = this.SECOND_BEACON_INITIAL_LOCATION.added(new VectorF(0, 1.5f * VuforiaLocation.MM_PER_INCH, 0));
         this.sideUltrasonicSensor = hardwareMap.ultrasonicSensor.get("leftUltrasound");
         this.closeMotors = this.rightMotors;
         this.fartherMotors = this.leftMotors;
