@@ -25,8 +25,8 @@ public class CompetitionBotAutonomousRed extends CompetitionBotAutonomous {
         this.PRE_WALL_FOLLOW_ANGLE = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 90);
         this.TOWARDS_BEACON_ANGLE = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 180);
         this.POST_WALL_FOLLOW_ROTATE_ANGLE = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 90);
-        this.SECOND_BEACON_INITIAL_LOCATION = new VectorF(-58 * VuforiaLocation.MM_PER_INCH, 35f * VuforiaLocation.MM_PER_INCH, 0);
-        this.SECOND_BEACON_PRESS_LOCATION = this.SECOND_BEACON_INITIAL_LOCATION.added(new VectorF(-4.75f * VuforiaLocation.MM_PER_INCH, 0, 0));
+        this.SECOND_BEACON_INITIAL_LOCATION = new VectorF(-60 * VuforiaLocation.MM_PER_INCH, 35f * VuforiaLocation.MM_PER_INCH, 0);
+        this.SECOND_BEACON_PRESS_LOCATION = this.SECOND_BEACON_INITIAL_LOCATION.added(new VectorF(-2.25f * VuforiaLocation.MM_PER_INCH, 0, 0));
         this.sideUltrasonicSensor = hardwareMap.ultrasonicSensor.get("rightUltrasound");
         this.closeMotors = this.leftMotors;
         this.fartherMotors = this.rightMotors;
