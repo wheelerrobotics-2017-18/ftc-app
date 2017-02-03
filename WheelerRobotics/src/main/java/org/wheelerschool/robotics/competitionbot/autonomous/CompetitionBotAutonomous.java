@@ -100,7 +100,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
         // Rotate robot to angle towards beacon
         Log.i(AUTO_STATE_LOG_TAG, "Rotate after initial drive");
-        robot.rotateRobotIMU(AFTER_ENCODER_ROTATE_ANGLE, 1);
+        robot.rotateRobotIMU(AFTER_ENCODER_ROTATE_ANGLE, 1.5);
 
         //      Drive to the wall:
         Log.i(AUTO_STATE_LOG_TAG, "Drive to initial first beacon");
