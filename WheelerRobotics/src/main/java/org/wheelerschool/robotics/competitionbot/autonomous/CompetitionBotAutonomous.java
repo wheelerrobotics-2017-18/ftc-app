@@ -172,7 +172,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
             Log.i(AUTO_STATE_LOG_TAG, "Rotate to launch angle");
             double launchRotationAngle = TranslationMotorNavigation.angleDifference(BALL_LAUNCH_ANGLE, robotRot);
-            robot.rotateRobotIMU(launchRotationAngle, 2);
+            robot.rotateRobotIMU(launchRotationAngle, 1.5);
             Log.i(AUTO_STATE_LOG_TAG, "IN LAUNCH ANGLE");
 
             Log.i(AUTO_STATE_LOG_TAG, "Drive to ball launch position");
