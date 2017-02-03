@@ -234,7 +234,7 @@ public class CompetitionBotConfig {
 
     private static long MAX_TIME_TIMEOUT = 200; // MAX time until TIMEOUT when running OpMode (millis)
     private static double NO_BEACON_ROTATE_SPEED = 0.25;
-    private static double MINIMUM_ROTATION_DIFF = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 5);
+    private static double MINIMUM_ROTATION_DIFF = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 3);
     private static long MINIMUM_ENCODER_DRIVE_VALUE = 800;
     private static long ENCODER_DRIVE_RAMP_DOWN_VALUE = 5000;
     private static double WALL_FOLLOW_FRONT_SPEED = 0.4;
