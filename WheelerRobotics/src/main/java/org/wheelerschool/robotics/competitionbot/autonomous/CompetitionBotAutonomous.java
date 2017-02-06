@@ -44,6 +44,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     public VectorF SECOND_BEACON_INITIAL_LOCATION;
     public VectorF SECOND_BEACON_PRESS_LOCATION;
     public int[] DESIRED_BEACON_COLOR;
+    public double BALL_LAUNCH_ANGLE;
 
 
     // Hardware Setup:
@@ -95,15 +96,17 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         // Autonomous Sections:
         // Drive forward by encoder counts:
         Log.i(AUTO_STATE_LOG_TAG, "Initial drive by encoder");
-        robot.driveForwardByEncoder(1, 1, 7000);
+        robot.driveForwardByEncoder(1, 1, 6900);
 
         // Rotate robot to angle towards beacon
         Log.i(AUTO_STATE_LOG_TAG, "Rotate after initial drive");
-        robot.rotateRobotIMU(AFTER_ENCODER_ROTATE_ANGLE, 1);
+        robot.rotateRobotIMU(AFTER_ENCODER_ROTATE_ANGLE, 1.5);
+
+        Thread.sleep(500);
 
         //      Drive to the wall:
         Log.i(AUTO_STATE_LOG_TAG, "Drive to initial first beacon");
-        Double robotRot = robot.driveToPosition(FIRST_BEACON_LOCATION, 1.5);
+        Double robotRot = robot.driveToPosition(FIRST_BEACON_LOCATION, 2.5);
         // Log final robot angle:
         Log.i(AUTO_STATE_LOG_TAG, "Robot Angle (after first beacon drive): " + robotRot);
 
@@ -123,10 +126,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         robot.pushBeacon(DESIRED_BEACON_COLOR);
 
         Log.i(AUTO_STATE_LOG_TAG, "Reverse from first beacon, to allow for rotation room");
-        robot.driveForwardByEncoder(0.8, 1, -1500);
-
-        // Sleep to break between rotate towards wall and rotate away
-        Thread.sleep(500);
+        robot.driveForwardByEncoder(1, 1, -1800);
 
         //      Rotate to follow wall:
         // Log the needed angle:
@@ -144,29 +144,49 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
             // Follow the wall:
             Log.i(AUTO_STATE_LOG_TAG, "\"Follow\" the wall! (use IMU to drive straight)");
-            robot.driveForwardByIMU(6500, true, 0, ROBOT_ROTATION_GAIN, 0.8, 5000, 0.4);
+            robot.driveForwardByIMU(6200, true, 0, ROBOT_ROTATION_GAIN, 0.8, 5000, 0.4);
             Log.i(AUTO_STATE_LOG_TAG, "DETECTED LINE (HOPEFULLY THE SECOND BEACON'S)!");
-
-            Thread.sleep(100);
 
             // Rotate to second beacon:
             Log.i(AUTO_STATE_LOG_TAG, "Relative rotation for second beacon alignment: " + POST_WALL_FOLLOW_ROTATE_ANGLE);
             Log.i(AUTO_STATE_LOG_TAG, "(Mostly) Align with second beacon, by rotate with IMU");
-            robot.rotateRobotIMU(POST_WALL_FOLLOW_ROTATE_ANGLE, 1);
+            robot.rotateRobotIMU(POST_WALL_FOLLOW_ROTATE_ANGLE, 1.5);
+
+            //  Spin up launcher for launch:
+            robot.setLauncherState(CompetitionBotConfig.LauncherMotorsState.LAUNCH);
 
             // Drive to press beacon:
             Log.i(AUTO_STATE_LOG_TAG, "Drive to second beacon initial location");
-            robot.driveToPosition(SECOND_BEACON_INITIAL_LOCATION, 2);
+            robot.driveToPosition(SECOND_BEACON_INITIAL_LOCATION, 1.5);
 
             Log.i(AUTO_STATE_LOG_TAG, "Drive to second beacon push location");
-            robot.driveToPosition(SECOND_BEACON_PRESS_LOCATION, 1);
+            robot.driveToPosition(SECOND_BEACON_PRESS_LOCATION, 2);
             Log.i(AUTO_STATE_LOG_TAG, "CLICK BEACON TWO HERE!");
 
             Log.i(AUTO_STATE_LOG_TAG, "Desired angle for beacon alignment: " + TOWARDS_BEACON_ANGLE);
             Log.i(AUTO_STATE_LOG_TAG, "Rotate to align with beacon (second time)");
-            robot.rotateRobotVision(TOWARDS_BEACON_ANGLE, ROBOT_ROTATION_GAIN);
+            robotRot = robot.rotateRobotVision(TOWARDS_BEACON_ANGLE, ROBOT_ROTATION_GAIN);
 
             robot.pushBeacon(DESIRED_BEACON_COLOR);
+
+            Log.i(AUTO_STATE_LOG_TAG, "Reverse from second beacon, to allow for rotation room");
+            robot.driveForwardByEncoder(1, 1, -1500);
+
+            Log.i(AUTO_STATE_LOG_TAG, "Rotate to launch angle");
+            double launchRotationAngle = TranslationMotorNavigation.angleDifference(BALL_LAUNCH_ANGLE, robotRot);
+            robot.rotateRobotIMU(launchRotationAngle, 1.5);
+            Log.i(AUTO_STATE_LOG_TAG, "IN LAUNCH ANGLE");
+
+            Log.i(AUTO_STATE_LOG_TAG, "Drive to ball launch position");
+            robot.driveForwardByIMU(5200, false, 0, ROBOT_ROTATION_GAIN, -1, 4200, -0.6);
+            Log.i(AUTO_STATE_LOG_TAG, "IN LAUNCH POSITION");
+
+            robot.dispenceBalls(2);  // Dispense balls
+
+            Thread.sleep(2000);  // Wait to make sure all balls have been dispensed
+
+            // Shut down launcher:
+            robot.setLauncherState(CompetitionBotConfig.LauncherMotorsState.DISABLE);
         } else {  // This means that the drive to position was interrupted:
             Log.e(AUTO_STATE_LOG_TAG, "Final Robot angle was 'null' (interrupted). ENDING!");
         }

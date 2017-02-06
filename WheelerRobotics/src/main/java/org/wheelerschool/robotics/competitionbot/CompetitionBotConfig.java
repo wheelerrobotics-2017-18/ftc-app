@@ -234,13 +234,16 @@ public class CompetitionBotConfig {
 
     private static long MAX_TIME_TIMEOUT = 200; // MAX time until TIMEOUT when running OpMode (millis)
     private static double NO_BEACON_ROTATE_SPEED = 0.25;
-    private static double MINIMUM_ROTATION_DIFF = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 5);
+    private static double MINIMUM_ROTATION_DIFF = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 3);
     private static long MINIMUM_ENCODER_DRIVE_VALUE = 800;
     private static long ENCODER_DRIVE_RAMP_DOWN_VALUE = 5000;
     private static double WALL_FOLLOW_FRONT_SPEED = 0.4;
     private static double NOMINAL_DISTANCE = 19;
     private static double MAXIMUM_VALUE_DIFF = 50;
-    private double MIN_LINE_REFLECT_AMT = 0.4; // TODO: UPDATE THIS VALUE
+    private double MIN_LINE_REFLECT_AMT = 0.3; // TODO: UPDATE THIS VALUE
+    private double FEEDER_POWER = 0.8;
+    private long BALL_DISPENCE_DELAY = 2500;
+    private double FEED_DETECTOR_BALL_VALUE = 0.03;
 
 
     public void noTargetSearchRotate() throws InterruptedException {
@@ -336,7 +339,8 @@ public class CompetitionBotConfig {
         TranslationMotorNavigation translationNavigation = new TranslationMotorNavigation();
         translationNavigation.ROTATION_IGNORE_DISTANCE = 60;
         translationNavigation.MIN_DRIVE_DISTANCE = 40;
-        translationNavigation.DEFAULT_ROTATION_GAIN = 1;
+        translationNavigation.DEFAULT_ROTATION_GAIN = 0.8;
+        translationNavigation.IGNORED_ROTATION_GAIN = 0.3;
 
         long time = System.currentTimeMillis();
         while (__runBooleanCallableIgnoreException(getIsRunning)) {
@@ -572,12 +576,11 @@ public class CompetitionBotConfig {
             Log.d(AUTO_FULL_LOG_TAG, "Right Motor Power: " + rightPower);
             DcMotorUtil.setMotorsPower(this.rightMotors, rightPower);
 
-            // Update telemetry:
-            telemetry.update();
 
             if (lineDetect) {
                 // Check if on beacon line:
                 double groundReflect = this.groundReflectSensor.getLightDetected();
+                telemetry.addData("Ground Reflect", groundReflect);
 
                 if (groundReflect > this.MIN_LINE_REFLECT_AMT
                         && (System.currentTimeMillis() - startTime) > lineDetectWaitTime) {
@@ -586,6 +589,8 @@ public class CompetitionBotConfig {
                     break;
                 }
             }
+
+            telemetry.update();
         }
 
         idleMotors();
@@ -674,12 +679,12 @@ public class CompetitionBotConfig {
 
             telemetry.addData("Rotation Power", navigationData.rotationPower);
 
-            // Update telemetry:
-            telemetry.update();
-
-
             // Check if on beacon line:
             double groundReflect = this.groundReflectSensor.getLightDetected();
+            telemetry.addData("Ground Reflect", groundReflect);
+
+            // Update telemetry:
+            telemetry.update();
 
             if (groundReflect > this.MIN_LINE_REFLECT_AMT
                     && (System.currentTimeMillis()-startTime) > lineDetectWaitTime) {
@@ -693,17 +698,25 @@ public class CompetitionBotConfig {
     private void __logColorSensorValue(String colorSensorName, String valueName, int value) {
         Log.d(AUTO_FULL_LOG_TAG, colorSensorName + " Color Sensor " + valueName + ": " + value);
     }
+
+
+    // TODO: PLEASE FIND BETTER WAY (more fool-proof):
     private int __calculateColorSensorDisparity(int[] DESIRED_BEACON_COLOR, ColorSensor colorSensor, String colorSensorName) {
         int disparity = 0;
         int red = colorSensor.red();
         __logColorSensorValue(colorSensorName, "red", red);
-        disparity += Math.abs(DESIRED_BEACON_COLOR[0] - red);
-        int green = colorSensor.green();
-        __logColorSensorValue(colorSensorName, "green", green);
-        disparity += Math.abs(DESIRED_BEACON_COLOR[1] - green);
         int blue = colorSensor.blue();
         __logColorSensorValue(colorSensorName, "blue", blue);
-        disparity += Math.abs(DESIRED_BEACON_COLOR[2] - blue);
+
+        if (DESIRED_BEACON_COLOR[0] > 0) {  // Wanted red
+            if (red <= blue) {
+                disparity += 10;
+            }
+        } else if (DESIRED_BEACON_COLOR[2] > 0) {  // Wanted blue
+            if (blue <= red) {
+                disparity += 10;
+            }
+        }
 
         Log.d(AUTO_FULL_LOG_TAG, colorSensorName + " Color Sensor Disparity: " + disparity);
         return disparity;
@@ -724,14 +737,49 @@ public class CompetitionBotConfig {
                 - __calculateColorSensorDisparity(DESIRED_BEACON_COLOR, this.colorRight, "Right");
 
         Log.d(AUTO_STATE_LOG_TAG, "Disparity Disparity: " + disparityDisparity);
+        telemetry.addData("Disparity Disparity", disparityDisparity);
         if (Integer.signum(disparityDisparity) == -1) {
+            telemetry.addData("Desired Color", "on Left");
             Log.d(AUTO_STATE_LOG_TAG, "Desired Color on Left");
             __pushBeaconAndWait(this.pusherLeft);
         } else if (Integer.signum(disparityDisparity) == 1){
+            telemetry.addData("Desired Color", "on Right");
             Log.d(AUTO_STATE_LOG_TAG, "Desired Color on Right");
             __pushBeaconAndWait(this.pusherRight);
         } else {
+            telemetry.addData("Desired Color", "equal [SKIP]");
             Log.d(AUTO_STATE_LOG_TAG, "Equal Desired Color -- Skipping!");
+        }
+
+        telemetry.update();
+    }
+
+    public void dispenceBalls(int ballQuantity) {
+        boolean feederNotDisabled = true;
+        double feederSpeed;
+
+        long initialTime = System.currentTimeMillis();
+        while (__runBooleanCallableIgnoreException(getIsRunning) && ballQuantity > 0) {
+            if ((System.currentTimeMillis()-initialTime) > BALL_DISPENCE_DELAY && !feederNotDisabled) {
+                feederNotDisabled = true;
+            }
+
+            if (feederNotDisabled){
+                double feedDetectorValue = this.feedDetector.getLightDetected();
+
+                //  Default feeder speed:
+                feederSpeed = 0;
+                //  Disable the feeder, if the feed detector is above the desired value:
+                if (feedDetectorValue > FEED_DETECTOR_BALL_VALUE) {
+                    initialTime = System.currentTimeMillis();
+                    feederNotDisabled = false;
+                    ballQuantity--;
+                } else {
+                    feederSpeed = FEEDER_POWER;
+                }
+                //  Set the feeder speed:
+                this.feederServo.setPower(feederSpeed);
+            }
         }
     }
 }
