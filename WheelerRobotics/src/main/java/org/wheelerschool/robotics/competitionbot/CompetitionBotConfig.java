@@ -737,15 +737,21 @@ public class CompetitionBotConfig {
                 - __calculateColorSensorDisparity(DESIRED_BEACON_COLOR, this.colorRight, "Right");
 
         Log.d(AUTO_STATE_LOG_TAG, "Disparity Disparity: " + disparityDisparity);
+        telemetry.addData("Disparity Disparity", disparityDisparity);
         if (Integer.signum(disparityDisparity) == -1) {
+            telemetry.addData("Desired Color", "on Left");
             Log.d(AUTO_STATE_LOG_TAG, "Desired Color on Left");
             __pushBeaconAndWait(this.pusherLeft);
         } else if (Integer.signum(disparityDisparity) == 1){
+            telemetry.addData("Desired Color", "on Right");
             Log.d(AUTO_STATE_LOG_TAG, "Desired Color on Right");
             __pushBeaconAndWait(this.pusherRight);
         } else {
+            telemetry.addData("Desired Color", "equal [SKIP]");
             Log.d(AUTO_STATE_LOG_TAG, "Equal Desired Color -- Skipping!");
         }
+
+        telemetry.update();
     }
 
     public void dispenceBalls(int ballQuantity) {
