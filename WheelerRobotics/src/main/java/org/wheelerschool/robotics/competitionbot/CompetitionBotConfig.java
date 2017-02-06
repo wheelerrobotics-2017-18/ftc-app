@@ -698,17 +698,25 @@ public class CompetitionBotConfig {
     private void __logColorSensorValue(String colorSensorName, String valueName, int value) {
         Log.d(AUTO_FULL_LOG_TAG, colorSensorName + " Color Sensor " + valueName + ": " + value);
     }
+
+
+    // TODO: PLEASE FIND BETTER WAY (more fool-proof):
     private int __calculateColorSensorDisparity(int[] DESIRED_BEACON_COLOR, ColorSensor colorSensor, String colorSensorName) {
         int disparity = 0;
         int red = colorSensor.red();
         __logColorSensorValue(colorSensorName, "red", red);
-        disparity += Math.abs(DESIRED_BEACON_COLOR[0] - red);
-        int green = colorSensor.green();
-        __logColorSensorValue(colorSensorName, "green", green);
-        disparity += Math.abs(DESIRED_BEACON_COLOR[1] - green);
         int blue = colorSensor.blue();
         __logColorSensorValue(colorSensorName, "blue", blue);
-        disparity += Math.abs(DESIRED_BEACON_COLOR[2] - blue);
+
+        if (DESIRED_BEACON_COLOR[0] > 0) {  // Wanted red
+            if (red <= blue) {
+                disparity += 10;
+            }
+        } else if (DESIRED_BEACON_COLOR[2] > 0) {  // Wanted blue
+            if (blue <= red) {
+                disparity += 10;
+            }
+        }
 
         Log.d(AUTO_FULL_LOG_TAG, colorSensorName + " Color Sensor Disparity: " + disparity);
         return disparity;
