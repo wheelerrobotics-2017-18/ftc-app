@@ -96,7 +96,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         // Autonomous Sections:
         // Drive forward by encoder counts:
         Log.i(AUTO_STATE_LOG_TAG, "Initial drive by encoder");
-        robot.driveForwardByEncoder(1, 1, 7000);
+        robot.driveForwardByEncoder(1, 1, 6900);
 
         // Rotate robot to angle towards beacon
         Log.i(AUTO_STATE_LOG_TAG, "Rotate after initial drive");
