@@ -18,7 +18,7 @@ public class CompetitionBotAutonomousBlue extends CompetitionBotAutonomous {
     @Override
     public void runOpMode() throws InterruptedException {
         // Sensor Setup:
-        this.AFTER_ENCODER_ROTATE_ANGLE = AngleUnit.RADIANS.fromDegrees(-80);
+        this.AFTER_ENCODER_ROTATE_ANGLE = AngleUnit.RADIANS.fromDegrees(-75);
         this.FIRST_BEACON_LOCATION = new VectorF(11.5f * VuforiaLocation.MM_PER_INCH, 57 * VuforiaLocation.MM_PER_INCH, 0);
         this.FIRST_BEACON_PRESS_LOCATION = this.FIRST_BEACON_LOCATION.added(new VectorF(0, 5.75f * VuforiaLocation.MM_PER_INCH, 0));
         Log.d("CompBotAutoBlue", this.FIRST_BEACON_LOCATION.toString());
