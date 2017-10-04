@@ -17,6 +17,7 @@ public class MB1242 implements HardwareDevice {
     I2cDeviceSynch device;
 
     // I2C REGISTERS:
+    //private static int TAKE_RANGE_READING_REGISTER = 81; // WRITE
     private static int TAKE_RANGE_READING_REGISTER = 81; // WRITE
     private static int GET_LAST_READING_REGISTER = 0; // READ
 
@@ -64,7 +65,7 @@ public class MB1242 implements HardwareDevice {
     // SENSOR INTERACTION:
     //      Signal sensor to take reading:
     public void takeReading() {
-        device.write8(TAKE_RANGE_READING_REGISTER, 0, true);
+        device.write(TAKE_RANGE_READING_REGISTER, new byte[]{0});
     }
     //      Get the last distance reading:
     public byte[] getLastDistance() {
