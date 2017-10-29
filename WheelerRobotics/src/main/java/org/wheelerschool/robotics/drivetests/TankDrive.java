@@ -1,12 +1,14 @@
 package org.wheelerschool.robotics.drivetests;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by luciengaitskell on 10/23/17.
  */
 
+@TeleOp
 public class TankDrive extends OpMode {
     private DcMotor motorBackLeft;
     private DcMotor motorFrontLeft;
