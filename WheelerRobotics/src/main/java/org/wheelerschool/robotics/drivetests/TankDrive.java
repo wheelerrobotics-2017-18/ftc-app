@@ -3,6 +3,7 @@ package org.wheelerschool.robotics.drivetests;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 /**
  * Created by luciengaitskell on 10/23/17.
@@ -19,7 +20,9 @@ public class TankDrive extends OpMode {
     public void init() {
         telemetry.addData("Status", "Start Init");
         motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
+        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
         motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
         telemetry.addData("Status", "Finish Init");
