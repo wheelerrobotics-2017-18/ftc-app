@@ -19,6 +19,7 @@ public class MaxBotixEZ4 extends I2cDeviceSynchDevice<I2cDeviceSynch> {
     public MaxBotixEZ4(I2cDeviceSynch device, I2cAddr addr) {
         super(device, true);
         deviceClient.setI2cAddress(addr);
+        deviceClient.engage();
     }
 
     @Override
@@ -37,7 +38,7 @@ public class MaxBotixEZ4 extends I2cDeviceSynchDevice<I2cDeviceSynch> {
     }
 
     public boolean takeReading() {
-        deviceClient.write(81, new byte[]{});
+        deviceClient.write(81, new byte[]{0});
         lastRead = System.currentTimeMillis();
         return true;
     }
@@ -52,6 +53,6 @@ public class MaxBotixEZ4 extends I2cDeviceSynchDevice<I2cDeviceSynch> {
         while (!rangeReady()) {}
 
         byte[] data = deviceClient.read(0, 2);
-        return data[0] << 8 + data[0];
+        return ((data[0] & 0xFF) << 8) | (data[1] & 0xFF);
     }
 }
