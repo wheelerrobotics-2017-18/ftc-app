@@ -49,7 +49,7 @@ public class MaxBotixEZ4 extends I2cDeviceSynchDevice<I2cDeviceSynch> {
 
     public int readRange() {
         if (lastRead == null)
-            return 0;
+            return -1;
         while (!rangeReady()) {}
 
         byte[] data = deviceClient.read(0, 2);
