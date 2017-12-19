@@ -10,9 +10,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.wheelerschool.robotics.library.motion.MechanumDrive4x;
+import org.wheelerschool.robotics.library.transducer.MaxBotixEZ4;
 
 @TeleOp
-public class MechanumDrive extends OpMode {
+public class MechanumDriveSensorRead extends OpMode {
 
     private MechanumDrive4x md;
 
@@ -20,6 +21,8 @@ public class MechanumDrive extends OpMode {
     private DcMotor motorFrontLeft;
     private DcMotor motorBackRight;
     private DcMotor motorFrontRight;
+
+    private MaxBotixEZ4 us;
 
 
     @Override
@@ -41,18 +44,23 @@ public class MechanumDrive extends OpMode {
                 motorBackLeft,
                 motorBackRight
         );
+
+        us = new MaxBotixEZ4(hardwareMap.i2cDeviceSynch.get("us1"));
     }
 
     @Override
     public void loop() {
         double[] motorP = md.updateMotors(gamepad1.left_stick_x, -gamepad1.left_stick_y, -gamepad1.right_stick_x/2);
-        telemetry.addData("fLeft", motorP[0]);
+        /*telemetry.addData("fLeft", motorP[0]);
         telemetry.addData("fLeft enc", motorFrontLeft.getCurrentPosition());
         telemetry.addData("fRight", motorP[1]);
         telemetry.addData("fRight enc", motorFrontRight.getCurrentPosition());
         telemetry.addData("bLeft", motorP[2]);
         telemetry.addData("bLeft enc", motorBackLeft.getCurrentPosition());
         telemetry.addData("bRight", motorP[3]);
-        telemetry.addData("bRight enc", motorBackRight.getCurrentPosition());
+        telemetry.addData("bRight enc", motorBackRight.getCurrentPosition());*/
+
+        us.takeReading();
+        telemetry.addData("US", us.readRange());
     }
 }
