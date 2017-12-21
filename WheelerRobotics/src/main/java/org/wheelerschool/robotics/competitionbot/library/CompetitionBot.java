@@ -16,6 +16,9 @@ public class CompetitionBot {
     // Drive Motors:
     public MechanumDrive4x driveMotors;
 
+    // Glypht:
+    private DcMotor glyphtDrive;
+
     private DcMotor setupDcMotor(DcMotor m, DcMotorSimple.Direction d) {
         m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m.setDirection(d);
@@ -29,6 +32,9 @@ public class CompetitionBot {
                 setupDcMotor(hw.dcMotor.get("motorFrontRight"), DcMotorSimple.Direction.FORWARD),
                 setupDcMotor(hw.dcMotor.get("motorBackLeft"), DcMotorSimple.Direction.REVERSE),
                 setupDcMotor(hw.dcMotor.get("motorBackRight"), DcMotorSimple.Direction.FORWARD));
+
+        // Glypht:
+        glyphtDrive = hw.dcMotor.get("glyphtDrive");
     }
 
     public CompetitionBot(HardwareMap hw) {
