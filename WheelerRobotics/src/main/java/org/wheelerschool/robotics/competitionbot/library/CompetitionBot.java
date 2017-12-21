@@ -19,6 +19,9 @@ public class CompetitionBot {
     // Glypht:
     private DcMotor glyphtDrive;
 
+    // Relic:
+    private DcMotor relicExtension;
+
     private DcMotor setupDcMotor(DcMotor m, DcMotorSimple.Direction d) {
         m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m.setDirection(d);
@@ -35,6 +38,9 @@ public class CompetitionBot {
 
         // Glypht:
         glyphtDrive = hw.dcMotor.get("glyphtDrive");
+
+        // Relic:
+        relicExtension = hw.dcMotor.get("relicExtension");
     }
 
     public CompetitionBot(HardwareMap hw) {
