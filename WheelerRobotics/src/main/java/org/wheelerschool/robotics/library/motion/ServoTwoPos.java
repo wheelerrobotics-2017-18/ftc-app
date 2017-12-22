@@ -7,6 +7,10 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 public class ServoTwoPos {
+    /**
+     * Allows for a servo to easily be set to two predefined positions.
+     */
+
     public Servo s;
     private double truePos;
     private double falsePos;
