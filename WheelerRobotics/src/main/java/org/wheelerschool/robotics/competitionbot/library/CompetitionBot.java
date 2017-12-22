@@ -31,10 +31,10 @@ public class CompetitionBot {
     private void setupDevices() {
         // Drive Motors:
         driveMotors = new MechanumDrive4x(
-                setupDcMotor(hw.dcMotor.get("motorFrontLeft"), DcMotorSimple.Direction.REVERSE),
-                setupDcMotor(hw.dcMotor.get("motorFrontRight"), DcMotorSimple.Direction.FORWARD),
-                setupDcMotor(hw.dcMotor.get("motorBackLeft"), DcMotorSimple.Direction.REVERSE),
-                setupDcMotor(hw.dcMotor.get("motorBackRight"), DcMotorSimple.Direction.FORWARD));
+                setupDcMotor(hw.dcMotor.get("motorFrontLeft"), DcMotorSimple.Direction.FORWARD),
+                setupDcMotor(hw.dcMotor.get("motorFrontRight"), DcMotorSimple.Direction.REVERSE),
+                setupDcMotor(hw.dcMotor.get("motorBackLeft"), DcMotorSimple.Direction.FORWARD),
+                setupDcMotor(hw.dcMotor.get("motorBackRight"), DcMotorSimple.Direction.REVERSE));
 
         // Glypht:
         glyphtDrive = hw.dcMotor.get("glyphtDrive");
