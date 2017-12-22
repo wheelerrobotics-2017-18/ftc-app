@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 
 public class MechanumDrive4x {
-    private DcMotor fLeft;
-    private DcMotor fRight;
-    private DcMotor bLeft;
-    private DcMotor bRight;
+    public DcMotor fLeft;
+    public DcMotor fRight;
+    public DcMotor bLeft;
+    public DcMotor bRight;
 
     public MechanumDrive4x(DcMotor fLeft, DcMotor fRight, DcMotor bLeft, DcMotor bRight) {
         this.fLeft = fLeft;
