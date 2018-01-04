@@ -20,7 +20,7 @@ public class DriveTest extends OpMode {
 
     @Override
     public void loop() {
-        cb.driveMotors.updateMotors(gamepad1.left_stick_x, gamepad1.left_stick_y,
+        cb.driveMotors.updateMotors(gamepad1.left_stick_x, -gamepad1.left_stick_y,
                 gamepad1.right_stick_x);
         telemetry.addData("Front Left", cb.driveMotors.fLeft.getCurrentPosition());
         telemetry.addData("Front Right", cb.driveMotors.fRight.getCurrentPosition());

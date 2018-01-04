@@ -27,7 +27,7 @@ public class DriveForward extends OpMode {
 
     @Override
     public void loop() {
-        telemetry.addData("m", Arrays.toString(cb.driveMotors.updateMotors(0, -0.5f, 0)));
+        telemetry.addData("m", Arrays.toString(cb.driveMotors.updateMotors(0, 0.5f, 0)));
         /*cb.driveMotors.fLeft.setPower(0.1f);
         cb.driveMotors.bLeft.setPower(0.1f);
         cb.driveMotors.fRight.setPower(0.1f);
