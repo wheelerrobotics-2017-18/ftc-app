@@ -18,6 +18,9 @@ public class CompetitionTeleOp extends OpMode {
 
     JoystickButtonUpdated glyphRaiseButton;
 
+    JoystickButtonUpdated glyphtUp;
+    JoystickButtonUpdated glyphtDown;
+
     @Override
     public void init() {
         cb = new CompetitionBot(hardwareMap);
@@ -25,6 +28,19 @@ public class CompetitionTeleOp extends OpMode {
             @Override
             public Boolean call() throws Exception {
                 return gamepad1.a;
+            }
+        });
+
+        glyphtUp = new JoystickButtonUpdated(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return gamepad2.dpad_up;
+            }
+        });
+        glyphtDown = new JoystickButtonUpdated(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return gamepad2.dpad_down;
             }
         });
     }
@@ -39,6 +55,23 @@ public class CompetitionTeleOp extends OpMode {
         telemetry.addData("Back Right", cb.driveMotors.bRight.getCurrentPosition());
 
         cb.setGlyphRaiseState(glyphRaiseButton.getValueIgnoreException().flipStateValue);
-        cb.setGlyphIntakeState(gamepad1.right_bumper);
+        cb.setGlyphIntakeState(gamepad1.b);
+
+        if (!cb.glyphtDrive.manualOverride(-gamepad2.left_stick_y)) {
+            JoystickButtonUpdated.JoystickButtonData upD = glyphtUp.getValueIgnoreException();
+            if (upD.buttonState && upD.isButtonStateNew) {
+                cb.glyphtDrive.moveRel(1, 1);
+            }
+
+            JoystickButtonUpdated.JoystickButtonData downD = glyphtDown.getValueIgnoreException();
+            if (downD.buttonState && downD.isButtonStateNew) {
+                cb.glyphtDrive.moveRel(-1, 1);
+            }
+
+            telemetry.addData("Idx", cb.glyphtDrive.currentIdx);
+            if (gamepad2.a) {
+                cb.glyphtDrive.stop();
+            }
+        }
     }
 }
