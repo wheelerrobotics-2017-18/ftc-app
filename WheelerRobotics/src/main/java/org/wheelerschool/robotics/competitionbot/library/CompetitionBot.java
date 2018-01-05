@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.wheelerschool.robotics.library.motion.MechanumDrive4x;
+import org.wheelerschool.robotics.library.motion.PositionalMotor;
 import org.wheelerschool.robotics.library.motion.ServoTwoPos;
 
 /**
@@ -20,7 +21,7 @@ public class CompetitionBot {
     public MechanumDrive4x driveMotors;
 
     // Glypht:
-    private DcMotor glyphtDrive;
+    public PositionalMotor glyphtDrive;
 
     private final double glyphIntakePower = 0.5;
     private ServoTwoPos rightGlyphRaise;
@@ -48,7 +49,10 @@ public class CompetitionBot {
                 setupDcMotor(hw.dcMotor.get("motorBackRight"), DcMotorSimple.Direction.FORWARD));
 
         // Glypht:
-        glyphtDrive = hw.dcMotor.get("glyphtDrive");
+        glyphtDrive = new PositionalMotor(hw.dcMotor.get("glyphtDrive"), new int[]{-9650, 0}, 1);
+        glyphtDrive.dcMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        glyphtDrive.dcMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        glyphtDrive.dcMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         rightGlyphRaise = new ServoTwoPos(hw.servo.get("rightGlyphRaise"), 0.2, 0.6);
         rightGlyphRaise.s.setDirection(Servo.Direction.REVERSE);
