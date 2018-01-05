@@ -57,7 +57,7 @@ public class CompetitionTeleOp extends OpMode {
         cb.setGlyphRaiseState(glyphRaiseButton.getValueIgnoreException().flipStateValue);
         cb.setGlyphIntakeState(gamepad1.b);
 
-        if (!cb.glyphtDrive.manualOverride(-gamepad2.left_stick_y)) {
+        if (!cb.glyphtDrive.manualOverride(-gamepad2.left_stick_y, gamepad2.x)) {
             JoystickButtonUpdated.JoystickButtonData upD = glyphtUp.getValueIgnoreException();
             if (upD.buttonState && upD.isButtonStateNew) {
                 cb.glyphtDrive.moveRel(1, 1);
