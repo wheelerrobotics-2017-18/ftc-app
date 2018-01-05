@@ -58,7 +58,10 @@ public class PositionalMotor {
     }
 
     public boolean manualOverride(float ctl) {
-        if (ctl != 0) {
+        return manualOverride(ctl, true);
+    }
+    public boolean manualOverride(float ctl, boolean enable) {
+        if (ctl != 0 && enable) {
             if (motorActive()) {
                 stop();
             }
