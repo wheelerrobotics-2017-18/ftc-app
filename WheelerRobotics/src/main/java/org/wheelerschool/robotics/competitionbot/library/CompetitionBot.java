@@ -55,6 +55,18 @@ public class CompetitionBot {
         return m;
     }
 
+    private static void resetEncoder(DcMotor m) {
+        m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    private void resetDriveMotors() {
+        resetEncoder(driveMotors.bLeft);
+        resetEncoder(driveMotors.bRight);
+        resetEncoder(driveMotors.fLeft);
+        resetEncoder(driveMotors.fRight);
+    }
+
     private void setupDevices() {
         // Drive Motors:
         driveMotors = new MechanumDrive4x(
