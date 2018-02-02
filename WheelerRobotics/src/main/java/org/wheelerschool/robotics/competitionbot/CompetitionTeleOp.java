@@ -91,6 +91,11 @@ public class CompetitionTeleOp extends OpMode {
         return (float) Math.copySign(Math.pow(Math.abs(j), exp), j);
     }
 
+
+    public void start() {
+        cb.jewelWrist.setPosition(CompetitionBot.JewelWristPositions.CLEAR);
+    }
+
     @Override
     public void loop() {
         telemetry.addData("Drive Motor",
