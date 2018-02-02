@@ -43,8 +43,12 @@ public class PositionalMotor {
     }
 
     public void moveTo(int idx, double power) {
+        moveToEnc(positions[updateIdx(idx)], power);
+    }
+
+    public void moveToEnc(int enc, double power) {
         dcMotor.setPower(0);
-        dcMotor.setTargetPosition(positions[updateIdx(idx)]);
+        dcMotor.setTargetPosition(enc);
         dcMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         dcMotor.setPower(power);
     }
