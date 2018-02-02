@@ -1,6 +1,7 @@
 package org.wheelerschool.robotics.competitionbot.library;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -37,6 +38,15 @@ public class CompetitionBot {
     public PositionalMotor relicExtension;
     public ServoTwoPos relicGrabber;
     public ServoTwoPos relicWrist;
+
+    // Jewel:
+    public Servo jewelWrist;
+    public static class JewelWristPositions {
+        public static float UP = 0.14f;
+        public static float CLEAR = 0.17f;
+        public static float EXT = 0.7f;
+    }
+    public ColorSensor jewelColor;
 
     private DcMotor setupDcMotor(DcMotor m, DcMotorSimple.Direction d) {
         m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -78,6 +88,11 @@ public class CompetitionBot {
         relicGrabber.setState(true);
         relicWrist = new ServoTwoPos(hw.servo.get("relicWrist"), 0, 1);
         relicWrist.setState(true);
+
+        // Jewel:
+        jewelWrist = hw.servo.get("jewelWrist");
+        jewelWrist.setPosition(JewelWristPositions.UP);
+        jewelColor = hw.colorSensor.get("jewelColor");
 
         setGlyphRaiseState(glyphState);
     }
