@@ -40,6 +40,7 @@ public abstract class CompetitionAutoSouth extends LinearOpMode {
 
     final int GLYPH_FWD_ENC = 1200;
     final int GLYPH_CLEAR_ENC = -700;
+    final int GLYPH_SND_FWD_ENC = 600;
 
     private void allEncDrive(int encL, int encR, float power, boolean rel, int time) {
         leftMotorEncDrive(encL, power, rel);
@@ -207,6 +208,11 @@ public abstract class CompetitionAutoSouth extends LinearOpMode {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        // ENSURE:
+        allEncDrive(GLYPH_SND_FWD_ENC, GLYPH_SND_FWD_ENC, 1f, true, 1000);
+        allEncDrive(-GLYPH_SND_FWD_ENC, -GLYPH_SND_FWD_ENC, 1f, true, 1000);
+        allEncDrive(GLYPH_CLEAR_ENC, GLYPH_CLEAR_ENC, 1f, true, 1000);
     }
 
     @Override
