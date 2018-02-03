@@ -41,6 +41,16 @@ public abstract class CompetitionAutoSouth extends LinearOpMode {
     final int GLYPH_FWD_ENC = 1200;
     final int GLYPH_CLEAR_ENC = -700;
 
+    private void allEncDrive(int encL, int encR, float power, boolean rel, int time) {
+        leftMotorEncDrive(encL, power, rel);
+        rightMotorEncDrive(encR, power, rel);
+
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     private static void motorEncDrive(DcMotor m, int enc, float power, boolean rel) {
         if (rel) {
