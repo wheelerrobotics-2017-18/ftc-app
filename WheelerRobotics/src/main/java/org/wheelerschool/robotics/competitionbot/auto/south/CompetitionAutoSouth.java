@@ -39,7 +39,7 @@ public abstract class CompetitionAutoSouth extends LinearOpMode {
 
 
     final int GLYPH_FWD_ENC = 1200;
-    final int GLYPH_CLEAR_ENC = -400;
+    final int GLYPH_CLEAR_ENC = -700;
 
 
     private static void motorEncDrive(DcMotor m, int enc, float power, boolean rel) {
