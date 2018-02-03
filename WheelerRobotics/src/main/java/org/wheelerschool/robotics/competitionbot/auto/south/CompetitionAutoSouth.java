@@ -35,7 +35,7 @@ public abstract class CompetitionAutoSouth extends LinearOpMode {
     final int JEWEL_ENC = 300;
     final int BALANCE_REPOS_ENC = 250;
     final int BALANCE_EXIT_ROT_ENC = 3000;
-    final int BALANCE_EXIT_FWD_ENC = 5300;
+    final int BALANCE_EXIT_FWD_ENC = 5200;
 
 
     final int GLYPH_FWD_ENC = 1200;
