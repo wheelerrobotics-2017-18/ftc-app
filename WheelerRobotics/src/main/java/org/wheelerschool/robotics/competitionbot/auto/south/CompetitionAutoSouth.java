@@ -183,27 +183,27 @@ public abstract class CompetitionAutoSouth extends LinearOpMode {
     }
 
     private void deposit() {
-        leftMotorEncDrive(GLYPH_FWD_ENC, ROT_POWER, true);
-        rightMotorEncDrive(GLYPH_FWD_ENC, ROT_POWER, true);
+        leftMotorEncDrive(GLYPH_FWD_ENC, 1, true);
+        rightMotorEncDrive(GLYPH_FWD_ENC, 1, true);
 
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        cb.glyphGrabber.setState(true);
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        leftMotorEncDrive(GLYPH_CLEAR_ENC, ROT_POWER, true);
-        rightMotorEncDrive(GLYPH_CLEAR_ENC, ROT_POWER, true);
+        cb.glyphGrabber.setState(true);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        leftMotorEncDrive(GLYPH_CLEAR_ENC, 1, true);
+        rightMotorEncDrive(GLYPH_CLEAR_ENC, 1, true);
 
         try {
-            Thread.sleep(4000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
