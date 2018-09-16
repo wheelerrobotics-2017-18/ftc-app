@@ -31,26 +31,32 @@ public abstract class CompetitionAutoSouth extends LinearOpMode {
 
     final int CRYPTO_COLUMN_WIDTH = 1020;
 
-    final int BALANCE_OFFSET = -150;
+    final int BALANCE_OFFSET = -100; //-150
     final int JEWEL_ENC = 300;
     final int BALANCE_REPOS_ENC = 250;
     final int BALANCE_EXIT_ROT_ENC = 3000;
-    final int BALANCE_EXIT_FWD_ENC = 5200;
+    final int BALANCE_EXIT_FWD_ENC = 5000; //5200 -- w/ -150 Balance for RED GOOD
 
 
     final int GLYPH_FWD_ENC = 1200;
     final int GLYPH_CLEAR_ENC = -700;
     final int GLYPH_SND_FWD_ENC = 600;
 
+    private void sleep(int time) {
+        long ts = System.currentTimeMillis();
+        while (time>(System.currentTimeMillis()-ts) && opModeIsActive()) {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     private void allEncDrive(int encL, int encR, float power, boolean rel, int time) {
         leftMotorEncDrive(encL, power, rel);
         rightMotorEncDrive(encR, power, rel);
 
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        sleep(time);
     }
 
     private static void motorEncDrive(DcMotor m, int enc, float power, boolean rel) {
@@ -90,7 +96,7 @@ public abstract class CompetitionAutoSouth extends LinearOpMode {
         long start = System.currentTimeMillis();
 
         double b = 0;
-        while (System.currentTimeMillis() - start < 1000) {
+        while ((System.currentTimeMillis() - start < 1000) && opModeIsActive()) {
             // Positive is red, negative is blue
             b = (cb.jewelColor.red() - cb.jewelColor.blue()) / 10240.;
 
@@ -116,103 +122,40 @@ public abstract class CompetitionAutoSouth extends LinearOpMode {
         }
 
         telemetry.update();
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        sleep(500);
 
-        leftMotorEncDrive(JEWEL_ENC*sign, ROT_POWER, false);
-        rightMotorEncDrive(JEWEL_ENC*-sign, ROT_POWER, false);
-
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        allEncDrive(JEWEL_ENC*sign, JEWEL_ENC*-sign, ROT_POWER, false, 1500);
 
         cb.jewelWrist.setPosition(CompetitionBot.JewelWristPositions.CLEAR);
 
-        leftMotorEncDrive(0, ROT_POWER, false);
-        rightMotorEncDrive(0, ROT_POWER, false);
-
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        allEncDrive(0, 0, ROT_POWER, false, 1500);
     }
 
     private void preExitBalancingStone() {
-        leftMotorEncDrive(BALANCE_REPOS_ENC, ROT_POWER, true);
-        rightMotorEncDrive(BALANCE_REPOS_ENC, ROT_POWER, true);
+        allEncDrive(BALANCE_REPOS_ENC,BALANCE_REPOS_ENC,ROT_POWER, true, 1200);
 
-        try {
-            Thread.sleep(1200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        leftMotorEncDrive(BALANCE_EXIT_ROT_ENC * getSideScale(), ROT_POWER, true);
-        rightMotorEncDrive(-BALANCE_EXIT_ROT_ENC * getSideScale(), ROT_POWER, true);
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        allEncDrive(BALANCE_EXIT_ROT_ENC * getSideScale(), -BALANCE_EXIT_ROT_ENC * getSideScale(), ROT_POWER, true, 3000);
     }
 
     private void exitBalancingStone(int distance) {
-        leftMotorEncDrive(distance, ROT_POWER, true);
-        rightMotorEncDrive(distance, ROT_POWER, true);
+        allEncDrive(distance, distance, ROT_POWER, true, 5000);
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        leftMotorEncDrive(BALANCE_EXIT_ROT_ENC*getSideScale(), ROT_POWER, true);
-        rightMotorEncDrive(-BALANCE_EXIT_ROT_ENC*getSideScale(), ROT_POWER, true);
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        allEncDrive(BALANCE_EXIT_ROT_ENC*getSideScale(), -BALANCE_EXIT_ROT_ENC*getSideScale(), ROT_POWER, true, 3000);
     }
 
     private void deposit() {
-        leftMotorEncDrive(GLYPH_FWD_ENC, 1, true);
-        rightMotorEncDrive(GLYPH_FWD_ENC, 1, true);
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        allEncDrive(GLYPH_FWD_ENC, GLYPH_FWD_ENC, 1, true, 1000);
 
         cb.glyphGrabber.setState(true);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        sleep(500);
 
-        leftMotorEncDrive(GLYPH_CLEAR_ENC, 1, true);
-        rightMotorEncDrive(GLYPH_CLEAR_ENC, 1, true);
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        allEncDrive(GLYPH_CLEAR_ENC, GLYPH_CLEAR_ENC, 1, true, 1000);
 
         // ENSURE:
         allEncDrive(GLYPH_SND_FWD_ENC, GLYPH_SND_FWD_ENC, 1f, true, 1000);
         allEncDrive(-GLYPH_SND_FWD_ENC, -GLYPH_SND_FWD_ENC, 1f, true, 1000);
-        allEncDrive(GLYPH_CLEAR_ENC, GLYPH_CLEAR_ENC, 1f, true, 1000);
+        //allEncDrive(GLYPH_CLEAR_ENC, GLYPH_CLEAR_ENC, 1f, true, 1000);
     }
 
     @Override
